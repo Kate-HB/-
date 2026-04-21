@@ -1,0 +1,209 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/29.6.6 Chrome/144.0.7559.236 Electron/40.8.4 Safari/537.36" version="29.6.6">
+  <diagram id="supermarket-level3-dfd-1.5.4" name="采购订单管理 Level 3 DFD">
+    <mxGraphModel dx="3813" dy="2463" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1480" pageHeight="980" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontSize=18;fontStyle=1;verticalAlign=middle;whiteSpace=wrap;" value="超市管理系统 — 3级数据流图（Level 3 DFD）&lt;br&gt;采购订单管理模块（1.5.4 采购订单管理）" vertex="1">
+          <mxGeometry height="65" width="820" x="-2.5" y="-210" as="geometry" />
+        </mxCell>
+        <mxCell id="ext1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#1a1a1a;fontSize=14;fontStyle=1;" value="员工" vertex="1">
+          <mxGeometry height="65" width="135" x="-70" y="320" as="geometry" />
+        </mxCell>
+        <mxCell id="ext2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#1a1a1a;fontSize=14;fontStyle=1;" value="仓库管理系统" vertex="1">
+          <mxGeometry height="65" width="135" x="20" y="570" as="geometry" />
+        </mxCell>
+        <mxCell id="ext3" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#1a1a1a;fontSize=14;fontStyle=1;" value="系统管理员" vertex="1">
+          <mxGeometry height="65" width="135" x="-230" y="250" as="geometry" />
+        </mxCell>
+        <mxCell id="cross_in" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#999999;dashed=1;fontSize=13;fontStyle=0;align=center;" value="供应商评价管理模块" vertex="1">
+          <mxGeometry height="65" width="155" x="80" y="425" as="geometry" />
+        </mxCell>
+        <mxCell id="proc1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#1a1a1a;align=center;verticalAlign=middle;fontSize=13;" value="&lt;font style=&quot;font-size: 19px;font-weight: bold;&quot;&gt;1.5.4.1&lt;/font&gt;&lt;br&gt;采购订单权限验证" vertex="1">
+          <mxGeometry height="85" width="195" x="290" y="-95" as="geometry" />
+        </mxCell>
+        <mxCell id="proc2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#1a1a1a;align=center;verticalAlign=middle;fontSize=13;" value="&lt;font style=&quot;font-size: 19px;font-weight: bold;&quot;&gt;1.5.4.2&lt;/font&gt;&lt;br&gt;供应商与合同匹配检查" vertex="1">
+          <mxGeometry height="85" width="195" x="440" y="72.5" as="geometry" />
+        </mxCell>
+        <mxCell id="proc3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#1a1a1a;align=center;verticalAlign=middle;fontSize=13;" value="&lt;font style=&quot;font-size: 19px;font-weight: bold;&quot;&gt;1.5.4.3&lt;/font&gt;&lt;br&gt;采购订单创建与录入" vertex="1">
+          <mxGeometry height="85" width="195" x="310" y="330" as="geometry" />
+        </mxCell>
+        <mxCell id="proc4" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#1a1a1a;align=center;verticalAlign=middle;fontSize=13;" value="&lt;font style=&quot;font-size: 19px;font-weight: bold;&quot;&gt;1.5.4.4&lt;/font&gt;&lt;br&gt;订单执行跟踪与到货反馈" vertex="1">
+          <mxGeometry height="85" width="195" x="310" y="540" as="geometry" />
+        </mxCell>
+        <mxCell id="proc5" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#1a1a1a;align=center;verticalAlign=middle;fontSize=13;" value="&lt;font style=&quot;font-size: 19px;font-weight: bold;&quot;&gt;1.5.4.5&lt;/font&gt;&lt;br&gt;采购订单保存与通知" vertex="1">
+          <mxGeometry height="85" width="195" x="310" y="770" as="geometry" />
+        </mxCell>
+        <mxCell id="ds1" parent="1" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;fillColor=#ffffff;strokeColor=#1a1a1a;fontSize=12;align=center;" value="D5.1&lt;br&gt;供应商基本信息文件" vertex="1">
+          <mxGeometry height="90" width="125" x="677" y="430" as="geometry" />
+        </mxCell>
+        <mxCell id="ds2" parent="1" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;fillColor=#ffffff;strokeColor=#1a1a1a;fontSize=12;align=center;" value="D5.2&lt;br&gt;供应商合同文件" vertex="1">
+          <mxGeometry height="90" width="125" x="790" y="67.5" as="geometry" />
+        </mxCell>
+        <mxCell id="ds3" parent="1" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;fillColor=#ffffff;strokeColor=#1a1a1a;fontSize=12;align=center;" value="D5.4&lt;br&gt;采购订单文件" vertex="1">
+          <mxGeometry height="90" width="125" x="590" y="910" as="geometry" />
+        </mxCell>
+        <mxCell id="ds4" parent="1" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;fillColor=#ffffff;strokeColor=#1a1a1a;fontSize=12;align=center;" value="D5.4.1&lt;br&gt;采购订单操作日志文件" vertex="1">
+          <mxGeometry height="90" width="125" x="900" y="210" as="geometry" />
+        </mxCell>
+        <mxCell id="cross_out" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#999999;dashed=1;fontSize=13;fontStyle=0;align=center;" value="财务管理模块" vertex="1">
+          <mxGeometry height="65" width="155" x="330" y="930" as="geometry" />
+        </mxCell>
+        <mxCell id="f1" edge="1" parent="1" source="ext1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#1a1a1a;endArrow=classic;" target="proc1" value="创建采购订单">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint y="-30" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="f2" edge="1" parent="1" source="ext1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#1a1a1a;endArrow=classic;" target="proc3" value="提交订单详细信息">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="250" y="352" />
+              <mxPoint x="250" y="352" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="f3" edge="1" parent="1" source="ext2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#1a1a1a;endArrow=classic;" target="proc4" value="反馈采购订单到货情况">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="238" y="602" />
+              <mxPoint x="238" y="600" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="f4" edge="1" parent="1" source="ext3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#1a1a1a;endArrow=classic;" target="proc1" value="提供权限验证数据">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="-162" y="-80" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="f5" edge="1" parent="1" source="cross_in" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#1a1a1a;endArrow=classic;" target="proc4" value="传递订单执行情况用于评价">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="340" y="458" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="f6" edge="1" parent="1" source="proc1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#1a1a1a;endArrow=classic;" target="proc3" value="传递授权确认">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="370" y="250" />
+              <mxPoint x="370" y="250" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="f7" edge="1" parent="1" source="proc3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#1a1a1a;endArrow=classic;" target="proc2" value="发送待匹配的订单数据">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="470" y="300" />
+              <mxPoint x="470" y="300" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="f8" edge="1" parent="1" source="proc2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#1a1a1a;endArrow=classic;" target="ds1" value="读取供应商信息">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="632" y="420" />
+              <mxPoint x="740" y="420" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="f9" edge="1" parent="1" source="proc2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#1a1a1a;endArrow=classic;" target="ds2" value="检查合同条款合规性">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="f10" edge="1" parent="1" source="proc2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#1a1a1a;endArrow=classic;" target="proc3" value="返回匹配检查结果">
+          <mxGeometry relative="1" x="-0.0544" y="-22" as="geometry">
+            <mxPoint x="22" y="22" as="offset" />
+            <Array as="points">
+              <mxPoint x="570" y="372" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="f11" edge="1" parent="1" source="proc3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#1a1a1a;endArrow=classic;" target="proc4" value="提交创建完成的订单">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="450" y="480" />
+              <mxPoint x="450" y="480" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="f12" edge="1" parent="1" source="proc3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#1a1a1a;endArrow=classic;" target="proc5" value="提交订单数据">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="560" y="390" />
+              <mxPoint x="560" y="780" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="f13" edge="1" parent="1" source="proc4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#1a1a1a;endArrow=classic;" target="proc5" value="提交到货反馈数据">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="f14" edge="1" parent="1" source="proc5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#1a1a1a;endArrow=classic;" target="ds3" value="生成并保存采购订单">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="652" y="840" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="f15" edge="1" parent="1" source="proc5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#1a1a1a;endArrow=classic;" target="ds1" value="关联采购订单到供应商">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="632" y="790" />
+              <mxPoint x="632" y="540" />
+              <mxPoint x="740" y="540" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="f16" edge="1" parent="1" source="proc5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#1a1a1a;endArrow=classic;" target="ds4" value="记录采购订单操作日志">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="f17" edge="1" parent="1" source="proc1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#1a1a1a;endArrow=classic;" target="ds4" value="写入权限验证记录">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="f18" edge="1" parent="1" source="proc5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#1a1a1a;endArrow=classic;" target="ext1" value="输出采购订单">
+          <mxGeometry relative="1" x="0.1609" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="-2" y="800" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="f19" edge="1" parent="1" source="proc5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#1a1a1a;endArrow=classic;" target="ext2" value="发送采购订单信息">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="90" y="780" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="f20" edge="1" parent="1" source="proc5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#1a1a1a;endArrow=classic;" target="ext1" value="输出采购订单确认">
+          <mxGeometry relative="1" x="-0.5723" as="geometry">
+            <mxPoint x="1" as="offset" />
+            <Array as="points">
+              <mxPoint x="-50" y="820" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="f21" edge="1" parent="1" source="proc4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#1a1a1a;endArrow=classic;" target="ext1" value="返回订单执行状态">
+          <mxGeometry relative="1" x="-0.0979" as="geometry">
+            <mxPoint x="1" as="offset" />
+            <Array as="points">
+              <mxPoint x="30" y="550" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="f22" edge="1" parent="1" source="proc5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#1a1a1a;endArrow=classic;" target="ext3" value="记录采购操作日志">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="-162" y="840" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="f23" edge="1" parent="1" source="proc5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#1a1a1a;endArrow=classic;" target="cross_out" value="传递采购金额信息">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

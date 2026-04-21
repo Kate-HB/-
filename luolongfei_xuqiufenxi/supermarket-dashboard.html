@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>超市管理系统</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'Inter', sans-serif; }
+    :root {
+      --primary: #16a34a;
+      --primary-hover: #15803d;
+      --sidebar-bg: #1f2937;
+      --sidebar-hover: #374151;
+      --bg-light: #f3f4f6;
+      --card-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    .sidebar-link:hover { background-color: var(--sidebar-hover); }
+    .sidebar-link.active { background-color: var(--primary); }
+    .stat-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+    .stat-card { transition: all 0.2s ease; }
+  </style>
+</head>
+<body class="bg-gray-100">
+  <div class="flex h-screen">
+    <!-- 侧边栏 -->
+    <aside class="w-64 bg-gray-800 text-white flex flex-col">
+      <div class="p-6 border-b border-gray-700">
+        <h1 class="text-xl font-bold flex items-center gap-2">
+          <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20"><path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"/></svg>
+          超市管理系统
+        </h1>
+      </div>
+      <nav class="flex-1 py-4">
+        <a href="#" class="sidebar-link active flex items-center gap-3 px-6 py-3 text-gray-300">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+          首页
+        </a>
+        <a href="#" class="sidebar-link flex items-center gap-3 px-6 py-3 text-gray-300">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+          商品管理
+        </a>
+        <a href="#" class="sidebar-link flex items-center gap-3 px-6 py-3 text-gray-300">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+          订单管理
+        </a>
+        <a href="#" class="sidebar-link flex items-center gap-3 px-6 py-3 text-gray-300">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+          会员管理
+        </a>
+        <a href="#" class="sidebar-link flex items-center gap-3 px-6 py-3 text-gray-300">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+          数据统计
+        </a>
+        <a href="#" class="sidebar-link flex items-center gap-3 px-6 py-3 text-gray-300">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          财务管理
+        </a>
+        <a href="#" class="sidebar-link flex items-center gap-3 px-6 py-3 text-gray-300">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          系统设置
+        </a>
+      </nav>
+      <div class="p-4 border-t border-gray-700">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-full bg-green-600 flex items-center justify-center font-bold">管</div>
+          <div>
+            <p class="font-medium">管理员</p>
+            <p class="text-sm text-gray-400">admin@supermarket.com</p>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- 主内容区 -->
+    <main class="flex-1 overflow-y-auto">
+      <!-- 顶部导航栏 -->
+      <header class="bg-white shadow-sm px-6 py-4 flex justify-between items-center">
+        <div class="flex items-center gap-4">
+          <input type="text" placeholder="搜索商品、订单、会员..." class="w-80 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500">
+        </div>
+        <div class="flex items-center gap-4">
+          <button class="p-2 text-gray-500 hover:text-gray-700 relative">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+            <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+          </button>
+          <button class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 flex items-center gap-2">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
+            新建订单
+          </button>
+        </div>
+      </header>
+
+      <!-- 内容区域 -->
+      <div class="p-6">
+        <!-- 欢迎横幅 -->
+        <div class="mb-6">
+          <h2 class="text-2xl font-bold text-gray-800">欢迎回来，管理员</h2>
+          <p class="text-gray-500">今天是 2026 年 4 月 1 日，祝您工作顺利！</p>
+        </div>
+
+        <!-- 统计卡片 -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+          <div class="stat-card bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-gray-500 text-sm">今日销售额</p>
+                <p class="text-2xl font-bold text-gray-800">¥28,450</p>
+                <p class="text-green-500 text-sm flex items-center gap-1">
+                  <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M5.293 9.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 7.414V15a1 1 0 11-2 0V7.414L6.707 9.707a1 1 0 01-1.414 0z"/></svg>
+                  +12.5%
+                </p>
+              </div>
+              <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              </div>
+            </div>
+          </div>
+          <div class="stat-card bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-gray-500 text-sm">订单数量</p>
+                <p class="text-2xl font-bold text-gray-800">156</p>
+                <p class="text-green-500 text-sm flex items-center gap-1">
+                  <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M5.293 9.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 7.414V15a1 1 0 11-2 0V7.414L6.707 9.707a1 1 0 01-1.414 0z"/></svg>
+                  +8.2%
+                </p>
+              </div>
+              <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+              </div>
+            </div>
+          </div>
+          <div class="stat-card bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-gray-500 text-sm">新增会员</p>
+                <p class="text-2xl font-bold text-gray-800">23</p>
+                <p class="text-green-500 text-sm flex items-center gap-1">
+                  <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M5.293 9.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 7.414V15a1 1 0 11-2 0V7.414L6.707 9.707a1 1 0 01-1.414 0z"/></svg>
+                  +15.3%
+                </p>
+              </div>
+              <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
+                <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/></svg>
+              </div>
+            </div>
+          </div>
+          <div class="stat-card bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-gray-500 text-sm">库存预警</p>
+                <p class="text-2xl font-bold text-gray-800">12</p>
+                <p class="text-red-500 text-sm flex items-center gap-1">
+                  <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M14.707 10.293a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 111.414-1.414L9 12.586V5a1 1 0 012 0v7.586l2.293-2.293a1 1 0 011.414 0z"/></svg>
+                  需补货
+                </p>
+              </div>
+              <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
+                <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 主内容网格 -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <!-- 销售图表区域 -->
+          <div class="lg:col-span-2 bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+            <div class="flex justify-between items-center mb-4">
+              <h3 class="text-lg font-semibold text-gray-800">销售趋势</h3>
+              <select class="px-3 py-1 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500">
+                <option>最近 7 天</option>
+                <option>最近 30 天</option>
+                <option>最近 90 天</option>
+              </select>
+            </div>
+            <div class="h-64 flex items-end justify-between gap-2 px-4">
+              <div class="w-full bg-green-100 rounded-t-lg hover:bg-green-200 transition-all" style="height: 60%" title="周一：¥18,200"></div>
+              <div class="w-full bg-green-200 rounded-t-lg hover:bg-green-300 transition-all" style="height: 80%" title="周二：¥24,500"></div>
+              <div class="w-full bg-green-300 rounded-t-lg hover:bg-green-400 transition-all" style="height: 45%" title="周三：¥13,800"></div>
+              <div class="w-full bg-green-400 rounded-t-lg hover:bg-green-500 transition-all" style="height: 90%" title="周四：¥27,600"></div>
+              <div class="w-full bg-green-500 rounded-t-lg hover:bg-green-600 transition-all" style="height: 70%" title="周五：¥21,400"></div>
+              <div class="w-full bg-green-600 rounded-t-lg hover:bg-green-700 transition-all" style="height: 100%" title="周六：¥30,800"></div>
+              <div class="w-full bg-green-500 rounded-t-lg hover:bg-green-600 transition-all" style="height: 75%" title="周日：¥23,100"></div>
+            </div>
+            <div class="flex justify-between mt-2 text-xs text-gray-500 px-4">
+              <span>周一</span><span>周二</span><span>周三</span><span>周四</span><span>周五</span><span>周六</span><span>周日</span>
+            </div>
+          </div>
+
+          <!-- 快捷操作 -->
+          <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+            <h3 class="text-lg font-semibold text-gray-800 mb-4">快捷操作</h3>
+            <div class="space-y-3">
+              <button class="w-full p-3 border border-gray-200 rounded-lg hover:border-green-500 hover:bg-green-50 transition-all flex items-center gap-3">
+                <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+                  <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
+                </div>
+                <span class="text-gray-700">快速收银</span>
+              </button>
+              <button class="w-full p-3 border border-gray-200 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition-all flex items-center gap-3">
+                <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                  <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+                </div>
+                <span class="text-gray-700">新建订单</span>
+              </button>
+              <button class="w-full p-3 border border-gray-200 rounded-lg hover:border-purple-500 hover:bg-purple-50 transition-all flex items-center gap-3">
+                <div class="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center">
+                  <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/></svg>
+                </div>
+                <span class="text-gray-700">添加会员</span>
+              </button>
+              <button class="w-full p-3 border border-gray-200 rounded-lg hover:border-orange-500 hover:bg-orange-50 transition-all flex items-center gap-3">
+                <div class="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center">
+                  <svg class="w-5 h-5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
+                </div>
+                <span class="text-gray-700">商品入库</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 最近订单表格 -->
+        <div class="mt-6 bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+          <div class="flex justify-between items-center mb-4">
+            <h3 class="text-lg font-semibold text-gray-800">最近订单</h3>
+            <a href="#" class="text-green-600 hover:text-green-700 text-sm font-medium">查看全部 →</a>
+          </div>
+          <table class="w-full">
+            <thead>
+              <tr class="text-left text-gray-500 text-sm border-b border-gray-100">
+                <th class="pb-3 font-medium">订单号</th>
+                <th class="pb-3 font-medium">会员</th>
+                <th class="pb-3 font-medium">金额</th>
+                <th class="pb-3 font-medium">状态</th>
+                <th class="pb-3 font-medium">时间</th>
+                <th class="pb-3 font-medium">操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="border-b border-gray-50 hover:bg-gray-50">
+                <td class="py-3 font-medium text-gray-800">#SO20260401001</td>
+                <td class="py-3 text-gray-600">张先生</td>
+                <td class="py-3 text-gray-800">¥256.00</td>
+                <td class="py-3"><span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">已完成</span></td>
+                <td class="py-3 text-gray-500">10 分钟前</td>
+                <td class="py-3"><button class="text-green-600 hover:text-green-700 text-sm font-medium">查看</button></td>
+              </tr>
+              <tr class="border-b border-gray-50 hover:bg-gray-50">
+                <td class="py-3 font-medium text-gray-800">#SO20260401002</td>
+                <td class="py-3 text-gray-600">李女士</td>
+                <td class="py-3 text-gray-800">¥189.50</td>
+                <td class="py-3"><span class="px-2 py-1 bg-yellow-100 text-yellow-700 text-xs rounded-full">配货中</span></td>
+                <td class="py-3 text-gray-500">25 分钟前</td>
+                <td class="py-3"><button class="text-green-600 hover:text-green-700 text-sm font-medium">查看</button></td>
+              </tr>
+              <tr class="border-b border-gray-50 hover:bg-gray-50">
+                <td class="py-3 font-medium text-gray-800">#SO20260401003</td>
+                <td class="py-3 text-gray-600">非会员</td>
+                <td class="py-3 text-gray-800">¥78.00</td>
+                <td class="py-3"><span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">已完成</span></td>
+                <td class="py-3 text-gray-500">32 分钟前</td>
+                <td class="py-3"><button class="text-green-600 hover:text-green-700 text-sm font-medium">查看</button></td>
+              </tr>
+              <tr class="border-b border-gray-50 hover:bg-gray-50">
+                <td class="py-3 font-medium text-gray-800">#SO20260401004</td>
+                <td class="py-3 text-gray-600">王先生</td>
+                <td class="py-3 text-gray-800">¥432.00</td>
+                <td class="py-3"><span class="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded-full">待支付</span></td>
+                <td class="py-3 text-gray-500">1 小时前</td>
+                <td class="py-3"><button class="text-green-600 hover:text-green-700 text-sm font-medium">查看</button></td>
+              </tr>
+              <tr>
+                <td class="py-3 font-medium text-gray-800">#SO20260401005</td>
+                <td class="py-3 text-gray-600">赵女士</td>
+                <td class="py-3 text-gray-800">¥167.80</td>
+                <td class="py-3"><span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">已完成</span></td>
+                <td class="py-3 text-gray-500">1 小时前</td>
+                <td class="py-3"><button class="text-green-600 hover:text-green-700 text-sm font-medium">查看</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- 库存预警和畅销商品 -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+          <!-- 库存预警 -->
+          <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+            <div class="flex justify-between items-center mb-4">
+              <h3 class="text-lg font-semibold text-gray-800">库存预警</h3>
+              <a href="#" class="text-green-600 hover:text-green-700 text-sm font-medium">管理库存 →</a>
+            </div>
+            <div class="space-y-3">
+              <div class="flex items-center justify-between p-3 bg-red-50 rounded-lg">
+                <div class="flex items-center gap-3">
+                  <div class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center">
+                    <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+                  </div>
+                  <div>
+                    <p class="font-medium text-gray-800">可口可乐 330ml</p>
+                    <p class="text-sm text-gray-500">当前库存：15 件</p>
+                  </div>
+                </div>
+                <button class="px-3 py-1 bg-red-600 text-white text-sm rounded-lg hover:bg-red-700">补货</button>
+              </div>
+              <div class="flex items-center justify-between p-3 bg-orange-50 rounded-lg">
+                <div class="flex items-center gap-3">
+                  <div class="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center">
+                    <svg class="w-5 h-5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+                  </div>
+                  <div>
+                    <p class="font-medium text-gray-800">薯片 原味 75g</p>
+                    <p class="text-sm text-gray-500">当前库存：28 件</p>
+                  </div>
+                </div>
+                <button class="px-3 py-1 bg-orange-600 text-white text-sm rounded-lg hover:bg-orange-700">补货</button>
+              </div>
+              <div class="flex items-center justify-between p-3 bg-yellow-50 rounded-lg">
+                <div class="flex items-center gap-3">
+                  <div class="w-10 h-10 bg-yellow-100 rounded-full flex items-center justify-center">
+                    <svg class="w-5 h-5 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+                  </div>
+                  <div>
+                    <p class="font-medium text-gray-800">牛奶 全脂 250ml</p>
+                    <p class="text-sm text-gray-500">当前库存：42 件</p>
+                  </div>
+                </div>
+                <button class="px-3 py-1 bg-yellow-600 text-white text-sm rounded-lg hover:bg-yellow-700">补货</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 畅销商品 -->
+          <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+            <div class="flex justify-between items-center mb-4">
+              <h3 class="text-lg font-semibold text-gray-800">畅销商品 TOP5</h3>
+              <a href="#" class="text-green-600 hover:text-green-700 text-sm font-medium">查看更多 →</a>
+            </div>
+            <div class="space-y-3">
+              <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                <div class="flex items-center gap-3">
+                  <div class="w-8 h-8 bg-yellow-100 rounded-full flex items-center justify-center text-yellow-700 font-bold text-sm">1</div>
+                  <div>
+                    <p class="font-medium text-gray-800">农夫山泉 550ml</p>
+                    <p class="text-sm text-gray-500">售出 328 件</p>
+                  </div>
+                </div>
+                <span class="text-green-600 font-semibold">¥2.00</span>
+              </div>
+              <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                <div class="flex items-center gap-3">
+                  <div class="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center text-gray-700 font-bold text-sm">2</div>
+                  <div>
+                    <p class="font-medium text-gray-800">康师傅红烧牛肉面</p>
+                    <p class="text-sm text-gray-500">售出 256 件</p>
+                  </div>
+                </div>
+                <span class="text-green-600 font-semibold">¥4.50</span>
+              </div>
+              <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                <div class="flex items-center gap-3">
+                  <div class="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center text-orange-700 font-bold text-sm">3</div>
+                  <div>
+                    <p class="font-medium text-gray-800">伊利纯牛奶 250ml</p>
+                    <p class="text-sm text-gray-500">售出 198 件</p>
+                  </div>
+                </div>
+                <span class="text-green-600 font-semibold">¥3.50</span>
+              </div>
+              <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                <div class="flex items-center gap-3">
+                  <div class="w-8 h-8 rounded-full flex items-center justify-center text-gray-700 font-bold text-sm">4</div>
+                  <div>
+                    <p class="font-medium text-gray-800">乐事薯片 原味 75g</p>
+                    <p class="text-sm text-gray-500">售出 167 件</p>
+                  </div>
+                </div>
+                <span class="text-green-600 font-semibold">¥7.00</span>
+              </div>
+              <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                <div class="flex items-center gap-3">
+                  <div class="w-8 h-8 rounded-full flex items-center justify-center text-gray-700 font-bold text-sm">5</div>
+                  <div>
+                    <p class="font-medium text-gray-800">可口可乐 330ml</p>
+                    <p class="text-sm text-gray-500">售出 145 件</p>
+                  </div>
+                </div>
+                <span class="text-green-600 font-semibold">¥3.00</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</body>
+</html>
