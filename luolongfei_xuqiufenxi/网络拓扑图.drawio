@@ -1,0 +1,130 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/29.6.6 Chrome/144.0.7559.236 Electron/40.8.4 Safari/537.36" version="29.6.6">
+  <diagram name="第 1 页" id="yF8jokibTE62nNMDYHgU">
+    <mxGraphModel dx="2703" dy="2131" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="ZzaiDuNVYKSIwWASQg0c-1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=#0A94FF;fontSize=18;" value="" vertex="1">
+          <mxGeometry height="885" width="1574" x="109" y="-21" as="geometry" />
+        </mxCell>
+        <mxCell id="gXM0PpAyPEefjIWFycjD-26" parent="1" style="whiteSpace=wrap;strokeWidth=2;fillColor=light-dark(#eeeeee,#1f2020);strokeColor=light-dark(#999999,#cccccc);fontColor=light-dark(#333333,#cccccc);fontSize=18;" value="无线客户端区" vertex="1">
+          <mxGeometry height="128" width="638" x="362" y="300" as="geometry" />
+        </mxCell>
+        <mxCell id="gXM0PpAyPEefjIWFycjD-27" parent="1" style="whiteSpace=wrap;strokeWidth=2;fillColor=light-dark(#eeeeee,#1f2020);strokeColor=light-dark(#999999,#cccccc);fontColor=light-dark(#333333,#cccccc);fontSize=18;" value="有线客户端区" vertex="1">
+          <mxGeometry height="176" width="933" x="184" y="645" as="geometry" />
+        </mxCell>
+        <mxCell id="gXM0PpAyPEefjIWFycjD-28" parent="1" style="whiteSpace=wrap;strokeWidth=2;fillColor=light-dark(#eeeeee,#1f2020);strokeColor=light-dark(#999999,#cccccc);fontColor=light-dark(#333333,#cccccc);fontSize=18;" value="🌐 Internet&#xa;（可选远程访问）" vertex="1">
+          <mxGeometry height="78" width="188" x="692" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="gXM0PpAyPEefjIWFycjD-29" parent="1" style="whiteSpace=wrap;strokeWidth=2;fillColor=light-dark(#eeeeee,#1f2020);strokeColor=light-dark(#999999,#cccccc);fontColor=light-dark(#333333,#cccccc);fontSize=18;" value="🔒 路由器 / 防火墙&#xa;（TP-Link ER605 或类似）" vertex="1">
+          <mxGeometry height="78" width="246" x="662" y="148" as="geometry" />
+        </mxCell>
+        <mxCell id="gXM0PpAyPEefjIWFycjD-30" parent="1" style="whiteSpace=wrap;strokeWidth=2;fillColor=light-dark(#eeeeee,#1f2020);strokeColor=light-dark(#999999,#cccccc);fontColor=light-dark(#333333,#cccccc);fontSize=18;" value="🔄 千兆交换机&#xa;（24口企业级交换机）" vertex="1">
+          <mxGeometry height="78" width="221" x="713" y="517" as="geometry" />
+        </mxCell>
+        <mxCell id="gXM0PpAyPEefjIWFycjD-31" parent="1" style="whiteSpace=wrap;strokeWidth=2;fillColor=light-dark(#eeeeee,#1f2020);strokeColor=light-dark(#999999,#cccccc);fontColor=light-dark(#333333,#cccccc);fontSize=18;" value="🖥️ 应用服务器 + 数据库服务器&#xa;（CPU i5 / 16GB RAM / 512GB SSD）" vertex="1">
+          <mxGeometry height="126" width="260" x="1163" y="712" as="geometry" />
+        </mxCell>
+        <mxCell id="gXM0PpAyPEefjIWFycjD-32" parent="1" style="whiteSpace=wrap;strokeWidth=2;fillColor=light-dark(#eeeeee,#1f2020);strokeColor=light-dark(#999999,#cccccc);fontColor=light-dark(#333333,#cccccc);fontSize=18;" value="💰 收银机1&#xa;（带条码扫描枪）" vertex="1">
+          <mxGeometry height="78" width="188" x="230" y="736" as="geometry" />
+        </mxCell>
+        <mxCell id="gXM0PpAyPEefjIWFycjD-33" parent="1" style="whiteSpace=wrap;strokeWidth=2;fillColor=light-dark(#eeeeee,#1f2020);strokeColor=light-dark(#999999,#cccccc);fontColor=light-dark(#333333,#cccccc);fontSize=18;" value="💰 收银机2" vertex="1">
+          <mxGeometry height="54" width="143" x="468" y="748" as="geometry" />
+        </mxCell>
+        <mxCell id="gXM0PpAyPEefjIWFycjD-34" parent="1" style="whiteSpace=wrap;strokeWidth=2;fillColor=light-dark(#eeeeee,#1f2020);strokeColor=light-dark(#999999,#cccccc);fontColor=light-dark(#333333,#cccccc);fontSize=18;" value="📦 仓库管理电脑" vertex="1">
+          <mxGeometry height="54" width="183" x="662" y="748" as="geometry" />
+        </mxCell>
+        <mxCell id="gXM0PpAyPEefjIWFycjD-35" parent="1" style="whiteSpace=wrap;strokeWidth=2;fillColor=light-dark(#eeeeee,#1f2020);strokeColor=light-dark(#999999,#cccccc);fontColor=light-dark(#333333,#cccccc);fontSize=18;" value="💼 办公室管理电脑" vertex="1">
+          <mxGeometry height="54" width="199" x="894" y="748" as="geometry" />
+        </mxCell>
+        <mxCell id="gXM0PpAyPEefjIWFycjD-36" parent="1" style="whiteSpace=wrap;strokeWidth=2;fillColor=light-dark(#eeeeee,#1f2020);strokeColor=light-dark(#999999,#cccccc);fontColor=light-dark(#333333,#cccccc);fontSize=18;" value="📱 经理手机" vertex="1">
+          <mxGeometry height="54" width="151" x="397" y="337" as="geometry" />
+        </mxCell>
+        <mxCell id="gXM0PpAyPEefjIWFycjD-37" parent="1" style="whiteSpace=wrap;strokeWidth=2;fillColor=light-dark(#eeeeee,#1f2020);strokeColor=light-dark(#999999,#cccccc);fontColor=light-dark(#333333,#cccccc);fontSize=18;" value="💻 经理笔记本" vertex="1">
+          <mxGeometry height="54" width="167" x="598" y="337" as="geometry" />
+        </mxCell>
+        <mxCell id="gXM0PpAyPEefjIWFycjD-38" parent="1" style="whiteSpace=wrap;strokeWidth=2;fillColor=light-dark(#eeeeee,#1f2020);strokeColor=light-dark(#999999,#cccccc);fontColor=light-dark(#333333,#cccccc);fontSize=18;" value="📟 店员平板" vertex="1">
+          <mxGeometry height="54" width="151" x="815" y="337" as="geometry" />
+        </mxCell>
+        <mxCell id="gXM0PpAyPEefjIWFycjD-39" parent="1" style="whiteSpace=wrap;strokeWidth=2;fillColor=light-dark(#eeeeee,#1f2020);strokeColor=light-dark(#999999,#cccccc);fontColor=light-dark(#333333,#cccccc);fontSize=18;" value="🖨️ 小票打印机&#xa;（热敏打印机）" vertex="1">
+          <mxGeometry height="78" width="172" x="1473" y="736" as="geometry" />
+        </mxCell>
+        <mxCell id="gXM0PpAyPEefjIWFycjD-40" edge="1" parent="1" source="gXM0PpAyPEefjIWFycjD-28" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;rounded=0;fontSize=18;" target="gXM0PpAyPEefjIWFycjD-29" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="gXM0PpAyPEefjIWFycjD-41" edge="1" parent="1" source="gXM0PpAyPEefjIWFycjD-29" style="curved=1;startArrow=none;endArrow=block;exitX=1;exitY=0.65;entryX=0.5;entryY=0;rounded=0;fontSize=18;" target="gXM0PpAyPEefjIWFycjD-30" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1569" y="263" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="gXM0PpAyPEefjIWFycjD-42" edge="1" parent="1" source="gXM0PpAyPEefjIWFycjD-30" style="curved=1;startArrow=none;endArrow=block;exitX=1;exitY=0.72;entryX=0.5;entryY=0;rounded=0;fontSize=18;" target="gXM0PpAyPEefjIWFycjD-31" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1293" y="637" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="gXM0PpAyPEefjIWFycjD-43" edge="1" parent="1" source="gXM0PpAyPEefjIWFycjD-30" style="curved=1;startArrow=none;endArrow=block;exitX=0;exitY=0.66;entryX=0.5;entryY=0;rounded=0;fontSize=18;" target="gXM0PpAyPEefjIWFycjD-32" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="324" y="637" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="gXM0PpAyPEefjIWFycjD-44" edge="1" parent="1" source="gXM0PpAyPEefjIWFycjD-30" style="curved=1;startArrow=none;endArrow=block;exitX=0;exitY=0.77;entryX=0.5;entryY=0;rounded=0;fontSize=18;" target="gXM0PpAyPEefjIWFycjD-33" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="540" y="637" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="gXM0PpAyPEefjIWFycjD-45" edge="1" parent="1" source="gXM0PpAyPEefjIWFycjD-30" style="curved=1;startArrow=none;endArrow=block;exitX=0.17;exitY=1;entryX=0.5;entryY=0;rounded=0;fontSize=18;" target="gXM0PpAyPEefjIWFycjD-34" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="753" y="637" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="gXM0PpAyPEefjIWFycjD-46" edge="1" parent="1" source="gXM0PpAyPEefjIWFycjD-30" style="curved=1;startArrow=none;endArrow=block;exitX=0.83;exitY=1;entryX=0.5;entryY=0;rounded=0;fontSize=18;" target="gXM0PpAyPEefjIWFycjD-35" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="994" y="637" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="gXM0PpAyPEefjIWFycjD-47" edge="1" parent="1" source="gXM0PpAyPEefjIWFycjD-30" style="curved=1;startArrow=none;endArrow=block;exitX=1;exitY=0.63;entryX=0.5;entryY=0;rounded=0;fontSize=18;" target="gXM0PpAyPEefjIWFycjD-39" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1559" y="637" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="gXM0PpAyPEefjIWFycjD-48" edge="1" parent="1" source="gXM0PpAyPEefjIWFycjD-29" style="curved=1;dashed=1;dashPattern=2 3;startArrow=none;endArrow=block;exitX=0;exitY=0.88;entryX=0.5;entryY=0;rounded=0;fontSize=18;" target="gXM0PpAyPEefjIWFycjD-36" value="Wi-Fi (WPA3)">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="472" y="263" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="gXM0PpAyPEefjIWFycjD-49" edge="1" parent="1" source="gXM0PpAyPEefjIWFycjD-29" style="curved=1;dashed=1;dashPattern=2 3;startArrow=none;endArrow=block;exitX=0.28;exitY=1;entryX=0.5;entryY=0;rounded=0;fontSize=18;" target="gXM0PpAyPEefjIWFycjD-37" value="Wi-Fi (WPA3)">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="681" y="263" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="gXM0PpAyPEefjIWFycjD-50" edge="1" parent="1" source="gXM0PpAyPEefjIWFycjD-29" style="curved=1;dashed=1;dashPattern=2 3;startArrow=none;endArrow=block;exitX=0.72;exitY=1;entryX=0.5;entryY=0;rounded=0;fontSize=18;" target="gXM0PpAyPEefjIWFycjD-38" value="Wi-Fi (WPA3)">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="890" y="263" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
