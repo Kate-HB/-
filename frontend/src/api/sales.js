@@ -1,0 +1,10 @@
+import { get, post, put } from './index.js';
+export const getSalesOrders = (params) => get('/sales-orders', params);
+export const getSalesOrder = (id) => get(`/sales-orders/${id}`);
+export const createSalesOrder = (data) => post('/sales-orders', data);
+export const getSalesReturns = (params) => get('/sales-returns', params);
+export const createSalesReturn = (data) => post('/sales-returns', data);
+export const approveSalesReturn = (id) => put(`/sales-returns/${id}/approve`);
+export const getSalesStatistics = (params) => get('/sales-statistics', params);
+export const getProductRankings = (params) => get('/product-rankings', params);
+export const cashRegister = (data) => post('/cash-register', data);

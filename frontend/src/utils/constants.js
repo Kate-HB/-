@@ -1,0 +1,10 @@
+export const PAYMENT_METHODS = ['现金', '微信支付', '支付宝', '银行卡', '会员卡'];
+export const SHIFT_TYPES = ['morning', 'afternoon', 'night', 'rest'];
+export const PROMOTION_TYPES = ['discount', 'full_reduction', 'buy_gift', 'points'];
+export const ACCOUNT_TYPES = ['asset', 'liability', 'equity', 'revenue', 'expense'];
+export const COST_TYPES = ['purchase', 'inventory', 'operation', 'other'];
+export const BACKUP_TYPES = ['full', 'incremental', 'differential'];
+export const LOG_TYPES = ['operation', 'login', 'exception', 'audit'];
+export const CONFIG_TYPES = ['system', 'ui', 'business'];
+export const TAX_TYPES = ['增值税', '企业所得税', '个人所得税', '印花税', '城建税'];
+export const PAGE_SIZES = [10, 20, 50, 100];

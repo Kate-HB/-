@@ -1,0 +1,13 @@
+import { get, post, put, del } from './index.js';
+export const getProducts = (params) => get('/products', params);
+export const createProduct = (data) => post('/products', data);
+export const updateProduct = (id, data) => put(`/products/${id}`, data);
+export const deleteProduct = (id) => del(`/products/${id}`);
+export const getCategories = () => get('/categories');
+export const createCategory = (data) => post('/categories', data);
+export const updateCategory = (id, data) => put(`/categories/${id}`, data);
+export const deleteCategory = (id) => del(`/categories/${id}`);
+export const getPromotions = (params) => get('/promotions', params);
+export const createPromotion = (data) => post('/promotions', data);
+export const updatePromotion = (id, data) => put(`/promotions/${id}`, data);
+export const deletePromotion = (id) => del(`/promotions/${id}`);

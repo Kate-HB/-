@@ -1,0 +1,1321 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>鲜丰超市管理系统 - 完整UI原型</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&amp;family=Noto+Sans+SC:wght@400;500;700&amp;display=swap');
+        :root { --primary: #2563eb; }
+        body { font-family: 'Inter', 'Noto Sans SC', system-ui, -apple-system, sans-serif; }
+        .management-bg { background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); }
+        .module-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .module-card:hover { transform: translateY(-4px); box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1); }
+        .nav-item { transition: all 0.2s ease; }
+        .nav-item:hover, .nav-item.active { background-color: #eff6ff; color: #2563eb; border-radius: 0.5rem; }
+        .nav-item.active { font-weight: 600; border-left: 3px solid #2563eb; }
+        .modern-table { border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); }
+        .modern-table th { background: linear-gradient(to right, #2563eb, #3b82f6); color: white; font-weight: 600; }
+        .kpi-card { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .kpi-card:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1); }
+        .login-card { box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25); backdrop-filter: blur(20px); }
+        .section-header { background: linear-gradient(to right, #1e40af, #3b82f6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 700; }
+        .menu-submenu { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+        .menu-item.open .menu-submenu { max-height: 500px; }
+        .toast { animation: slideInRight 0.3s ease forwards; }
+        .modal { animation: fadeInScale 0.2s ease forwards; }
+        .data-table-row:hover { background-color: #f8fafc; }
+        .status-active { background-color: #dcfce7; color: #166534; }
+        .status-inactive { background-color: #fef3c7; color: #92400e; }
+        .status-pending { background-color: #e0e7ff; color: #3730a3; }
+        .status-danger { background-color: #fee2e2; color: #991b1b; }
+        .tab-btn { transition: all 0.2s ease; }
+        .tab-btn.active { color: #2563eb; border-bottom: 2px solid #2563eb; font-weight: 600; }
+    </style>
+</head>
+<body class="bg-slate-50">
+
+<!-- ==================== 登录模块 ==================== -->
+<div id="login-view" class="min-h-screen flex items-center justify-center management-bg p-6">
+    <div class="max-w-5xl w-full grid grid-cols-1 lg:grid-cols-5 gap-8 items-center">
+        <div class="lg:col-span-2 px-8 hidden lg:block">
+            <div class="flex items-center gap-x-3 mb-8">
+                <div class="w-14 h-14 bg-gradient-to-br from-blue-600 to-emerald-500 rounded-2xl flex items-center justify-center shadow-lg">
+                    <i class="fa-solid fa-store text-white text-3xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-4xl font-bold text-slate-800">鲜丰超市</h1>
+                    <p class="text-emerald-600 font-medium tracking-wider">SUPERMARKET</p>
+                </div>
+            </div>
+            <div class="space-y-6">
+                <div>
+                    <h2 class="text-5xl font-bold text-slate-800 leading-tight">欢迎使用<br>超市管理系统</h2>
+                    <p class="mt-4 text-lg text-slate-600">专业 · 高效 · 智能的零售解决方案</p>
+                </div>
+                <div class="flex items-center gap-x-4 text-sm">
+                    <div class="flex -space-x-2">
+                        <div class="w-8 h-8 bg-blue-100 rounded-full ring-2 ring-white flex items-center justify-center"><i class="fa-solid fa-user text-blue-600 text-xs"></i></div>
+                        <div class="w-8 h-8 bg-emerald-100 rounded-full ring-2 ring-white flex items-center justify-center"><i class="fa-solid fa-user-tie text-emerald-600 text-xs"></i></div>
+                        <div class="w-8 h-8 bg-amber-100 rounded-full ring-2 ring-white flex items-center justify-center"><i class="fa-solid fa-user-cog text-amber-600 text-xs"></i></div>
+                    </div>
+                    <span class="text-slate-500">已服务 <span class="font-semibold text-slate-700">2,847</span> 家门店</span>
+                </div>
+            </div>
+        </div>
+        <div class="lg:col-span-3">
+            <div class="login-card bg-white rounded-3xl p-10 shadow-2xl border border-slate-100 max-w-md mx-auto lg:mx-0">
+                <div class="flex items-center justify-between mb-8">
+                    <div>
+                        <div class="inline-flex items-center px-3 py-1 rounded-full bg-blue-100 text-blue-700 text-xs font-semibold tracking-widest">LOGIN MODULE</div>
+                        <h3 class="text-3xl font-bold text-slate-800 mt-2">登录模块</h3>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-xs text-slate-400">物理名</div>
+                        <div class="font-mono text-sm font-semibold text-blue-600">LoginModule</div>
+                    </div>
+                </div>
+                <div class="space-y-6">
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-2">用户名 <span class="text-red-500">*</span></label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"><i class="fa-solid fa-user text-slate-400"></i></div>
+                            <input id="username" type="text" class="w-full pl-11 pr-4 py-3.5 bg-slate-50 border border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-2xl text-base placeholder:text-slate-400 transition-all" placeholder="请输入用户名 (4-8位字符)" autocomplete="username">
+                        </div>
+                        <p class="text-xs text-slate-400 mt-1.5 ml-1">长度检查 [4,8] | 非空检查</p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-2">密码 <span class="text-red-500">*</span></label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"><i class="fa-solid fa-lock text-slate-400"></i></div>
+                            <input id="password" type="password" class="w-full pl-11 pr-12 py-3.5 bg-slate-50 border border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-2xl text-base placeholder:text-slate-400 transition-all" placeholder="请输入密码 (8-16位字符)" autocomplete="current-password">
+                            <button type="button" onclick="togglePassword()" class="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 hover:text-slate-600"><i class="fa-solid fa-eye" id="eye-icon"></i></button>
+                        </div>
+                        <p class="text-xs text-slate-400 mt-1.5 ml-1">长度检查 [8,16] | 界面显示为掩盖码 | 双端检查</p>
+                    </div>
+                    <div class="flex gap-x-3 pt-4">
+                        <button onclick="handleLogin()" class="flex-1 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 transition-all text-white font-semibold py-3.5 rounded-2xl text-base shadow-lg shadow-blue-600/30 flex items-center justify-center gap-x-2"><i class="fa-solid fa-sign-in-alt"></i><span>登录</span></button>
+                        <button onclick="handleReset()" class="flex-1 bg-white hover:bg-slate-50 border border-slate-300 text-slate-700 font-semibold py-3.5 rounded-2xl text-base transition-all flex items-center justify-center gap-x-2"><i class="fa-solid fa-undo"></i><span>重置</span></button>
+                    </div>
+                </div>
+                <div class="mt-8 pt-6 border-t border-slate-100">
+                    <div class="flex items-start gap-x-2 text-xs text-slate-500">
+                        <i class="fa-solid fa-info-circle mt-0.5 text-blue-500"></i>
+                        <div>
+                            <span class="font-medium">事件说明：</span>点击登录将请求 <span class="font-mono text-blue-600">/user</span>、<span class="font-mono text-blue-600">/permission</span>、<span class="font-mono text-blue-600">/supermarket/menu</span>、<span class="font-mono text-blue-600">/supermarket/notification</span><br>
+                            <span class="font-medium">错误信息：</span>001=空值 | 002=长度不符 | 003=验证失败 | 004=无权限
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center mt-6"><p class="text-xs text-slate-400">测试账号：<span class="font-mono bg-slate-100 px-1.5 py-0.5 rounded">admin</span> / <span class="font-mono bg-slate-100 px-1.5 py-0.5 rounded">12345678</span></p></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ==================== 主界面 ==================== -->
+<div id="main-view" class="hidden min-h-screen flex flex-col management-bg">
+    <nav class="bg-white border-b border-slate-200 sticky top-0 z-50">
+        <div class="max-w-screen-2xl mx-auto">
+            <div class="px-8 h-16 flex items-center justify-between">
+                <div class="flex items-center gap-x-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-blue-600 to-emerald-500 rounded-xl flex items-center justify-center shadow-md"><i class="fa-solid fa-store text-white text-xl"></i></div>
+                    <div><span class="font-bold text-2xl text-slate-800">鲜丰超市</span><span class="text-emerald-600 font-semibold text-xl">管理系统</span></div>
+                    <div class="ml-3 px-3 py-1 bg-emerald-100 text-emerald-700 text-xs font-bold rounded-full tracking-wider">v2.6.0</div>
+                </div>
+                <div class="flex items-center gap-x-6">
+                    <div class="flex items-center gap-x-2 bg-slate-100 px-4 h-9 rounded-2xl text-sm"><i class="fa-regular fa-clock text-emerald-600"></i><span id="datetime" class="font-mono font-medium text-slate-700 tabular-nums"></span></div>
+                    <div class="relative">
+                        <button onclick="showNotifications()" class="w-10 h-10 flex items-center justify-center text-slate-500 hover:text-blue-600 hover:bg-blue-50 rounded-2xl transition-all relative"><i class="fa-solid fa-bell text-xl"></i><span class="absolute top-1.5 right-1.5 w-5 h-5 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center ring-2 ring-white">3</span></button>
+                    </div>
+                    <div class="flex items-center gap-x-3 pl-4 border-l border-slate-200">
+                        <div class="text-right"><div class="text-sm font-semibold text-slate-700">刘锦行</div><div class="text-xs text-emerald-600 font-medium">系统管理员</div></div>
+                        <div class="w-9 h-9 bg-gradient-to-br from-blue-500 to-emerald-400 rounded-2xl overflow-hidden ring-2 ring-white shadow-sm"><img src="https://i.pravatar.cc/36?img=68" alt="头像" class="w-full h-full object-cover"></div>
+                        <button onclick="logout()" class="text-xs px-3 py-1.5 text-red-500 hover:bg-red-50 rounded-xl transition-colors flex items-center gap-x-1"><i class="fa-solid fa-sign-out-alt"></i><span class="hidden md:inline">退出</span></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <div class="flex flex-1 max-w-screen-2xl mx-auto w-full">
+        <div class="w-72 bg-white border-r border-slate-200 p-5 flex-shrink-0 overflow-y-auto">
+            <div class="mb-4 px-3"><div class="text-xs font-bold tracking-[1.5px] text-slate-400 mb-2">主菜单 NAVIGATION</div></div>
+            <nav class="space-y-1" id="sidebar-menu"></nav>
+            <div class="mt-8 px-3">
+                <div class="text-xs font-bold tracking-[1.5px] text-slate-400 mb-2">快速入口</div>
+                <div class="grid grid-cols-2 gap-2">
+                    <button onclick="quickAction('inventory-check')" class="text-xs flex items-center gap-x-2 px-3 py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 rounded-xl transition-colors"><i class="fa-solid fa-boxes text-emerald-600"></i><span>库存盘点</span></button>
+                    <button onclick="quickAction('daily-report')" class="text-xs flex items-center gap-x-2 px-3 py-2 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-xl transition-colors"><i class="fa-solid fa-chart-line text-blue-600"></i><span>日报生成</span></button>
+                </div>
+            </div>
+        </div>
+        <div class="flex-1 p-8 overflow-auto" id="content-area"></div>
+    </div>
+    <div class="bg-white border-t border-slate-200 px-8 py-2 text-xs flex items-center justify-between text-slate-500">
+        <div>物理模块：<span class="font-mono text-blue-600">MainModule</span> | 当前用户权限已加载 | 数据来源 supermarket_db</div>
+        <div>&copy; 2026 鲜丰超市管理系统 · 阶段五 UI 原型</div>
+    </div>
+</div>
+
+<!-- 错误模态框 -->
+<div id="error-modal" onclick="hideErrorModal()" class="hidden fixed inset-0 bg-black/40 flex items-center justify-center z-[100]">
+    <div onclick="event.stopImmediatePropagation()" class="bg-white rounded-3xl w-full max-w-md mx-4 shadow-2xl">
+        <div class="px-7 pt-6 pb-5">
+            <div class="flex items-center gap-x-3">
+                <div id="error-icon" class="w-11 h-11 rounded-2xl flex-shrink-0 flex items-center justify-center"></div>
+                <div class="flex-1 min-w-0"><div id="error-title" class="font-bold text-xl text-slate-800"></div><div id="error-code" class="text-xs font-mono text-red-500 mt-0.5"></div></div>
+            </div>
+            <div id="error-message" class="mt-4 text-sm leading-relaxed text-slate-600"></div>
+        </div>
+        <div class="border-t px-7 py-4 flex justify-end"><button onclick="hideErrorModal()" class="px-8 py-2 text-sm font-semibold rounded-2xl bg-slate-800 text-white hover:bg-black transition-colors">我知道了</button></div>
+    </div>
+</div>
+
+<!-- 通知下拉 -->
+<div id="notification-dropdown" class="hidden absolute right-8 top-16 w-80 bg-white rounded-2xl shadow-2xl border border-slate-100 z-[90] overflow-hidden">
+    <div class="px-5 py-4 border-b flex items-center justify-between bg-slate-50"><span class="font-semibold text-slate-700">公告信息</span><span class="text-xs px-2 py-0.5 bg-emerald-100 text-emerald-700 rounded-full">3条未读</span></div>
+    <div class="max-h-80 overflow-auto text-sm" id="notification-list"></div>
+    <div class="p-3 border-t text-center"><button onclick="viewAllNotifications()" class="text-xs text-blue-600 hover:text-blue-700 font-medium">查看全部通知 →</button></div>
+</div>
+
+<!-- 通用模态框容器 -->
+<div id="global-modal-container"></div>
+
+<script>
+// ==================== 核心函数 ====================
+function updateDateTime() {
+    const el = document.getElementById('datetime');
+    if (!el) return;
+    setInterval(() => {
+        const now = new Date();
+        el.textContent = now.toLocaleString('zh-CN', {year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false}).replace(/\//g,'-');
+    }, 1000);
+}
+
+function togglePassword() {
+    const input = document.getElementById('password');
+    const icon = document.getElementById('eye-icon');
+    if (input.type === 'password') { input.type = 'text'; icon.classList.replace('fa-eye','fa-eye-slash'); }
+    else { input.type = 'password'; icon.classList.replace('fa-eye-slash','fa-eye'); }
+}
+
+function showError(code, message) {
+    const modal = document.getElementById('error-modal');
+    const m = { '001': ['输入校验失败','fa-exclamation-circle','bg-orange-100 text-orange-600'],
+                '002': ['长度校验失败','fa-exclamation-circle','bg-orange-100 text-orange-600'],
+                '003': ['身份验证失败','fa-user-times','bg-red-100 text-red-600'],
+                '004': ['权限不足','fa-ban','bg-red-100 text-red-600'] };
+    const [title, icon, color] = m[code] || ['操作失败','fa-exclamation-triangle','bg-red-100 text-red-600'];
+    document.getElementById('error-icon').innerHTML = `<i class="fa-solid ${icon} text-2xl"></i>`;
+    document.getElementById('error-icon').className = `w-11 h-11 rounded-2xl flex-shrink-0 flex items-center justify-center ${color}`;
+    document.getElementById('error-title').textContent = title;
+    document.getElementById('error-code').textContent = `/message/error/${code}`;
+    document.getElementById('error-message').textContent = message;
+    modal.classList.remove('hidden'); modal.classList.add('flex');
+}
+function hideErrorModal() { const m = document.getElementById('error-modal'); m.classList.remove('flex'); m.classList.add('hidden'); }
+
+function handleLogin() {
+    const u = document.getElementById('username').value.trim();
+    const p = document.getElementById('password').value.trim();
+    if (!u || !p) { showError('001','用户名和密码有一方为空时，显示/message/error/001。'); return; }
+    if (u.length<4||u.length>8||p.length<8||p.length>16) { showError('002','用户名或密码长度不符合限制，显示/message/error/002。'); return; }
+    if (u==='admin' && p==='12345678') {
+        setTimeout(() => { switchToMain(); showToast('登录成功！欢迎回来，管理员','success'); }, 650);
+    } else { showError('003','用户名和密码验证失败，显示/message/error/003。'); }
+}
+function handleReset() { document.getElementById('username').value=''; document.getElementById('password').value=''; document.getElementById('username').focus(); showToast('已清除用户名与密码','info',1400); }
+
+function showToast(msg, type='success', dur=2200) {
+    const c = document.createElement('div');
+    c.className = `toast fixed top-5 right-5 z-[200] max-w-xs px-5 py-3.5 rounded-2xl shadow-xl flex items-start gap-x-3 text-sm border ${type==='success'?'bg-emerald-600 border-emerald-700 text-white':type==='error'?'bg-red-600 border-red-700 text-white':'bg-blue-600 border-blue-700 text-white'}`;
+    const icon = type==='success'?'fa-check-circle':type==='error'?'fa-exclamation-circle':'fa-info-circle';
+    c.innerHTML = `<i class="fa-solid ${icon} mt-0.5 text-lg flex-shrink-0"></i><div class="flex-1">${msg}</div>`;
+    document.body.appendChild(c);
+    setTimeout(() => { c.style.opacity='0'; c.style.transition='all 0.25s ease'; setTimeout(()=>c.remove(),200); }, dur);
+}
+
+function switchToMain() {
+    document.getElementById('login-view').classList.add('hidden');
+    document.getElementById('main-view').classList.remove('hidden');
+    initMainModule();
+}
+function logout() {
+    document.getElementById('main-view').classList.add('hidden');
+    document.getElementById('login-view').classList.remove('hidden');
+    document.getElementById('username').value=''; document.getElementById('password').value='';
+    showToast('已安全退出系统','info',1600);
+}
+
+// ==================== 主界面初始化 ====================
+function initMainModule() {
+    updateDateTime();
+    buildSidebarMenu();
+    loadModule('dashboard');
+    initNotifications();
+}
+
+// ==================== 侧边栏菜单 ====================
+function buildSidebarMenu() {
+    const container = document.getElementById('sidebar-menu');
+    const menus = [
+        { id:'dashboard', icon:'fa-tachometer-alt', label:'首页仪表盘', submenu:[] },
+        { id:'product', icon:'fa-boxes', label:'商品管理', color:'blue', submenu:[
+            { label:'商品列表', mod:'product' },
+            { label:'分类管理', mod:'product-category' },
+            { label:'价格与促销', mod:'product-promo' }
+        ]},
+        { id:'supplier', icon:'fa-truck', label:'供应商管理', color:'emerald', submenu:[
+            { label:'供应商档案', mod:'supplier' },
+            { label:'合同管理', mod:'supplier-contract' },
+            { label:'供应商评价', mod:'supplier-eval' }
+        ]},
+        { id:'purchase', icon:'fa-shopping-cart', label:'采购管理', color:'amber', submenu:[
+            { label:'采购订单', mod:'purchase' },
+            { label:'入库验收', mod:'purchase-inbound' }
+        ]},
+        { id:'warehouse', icon:'fa-warehouse', label:'仓库管理', color:'violet', submenu:[
+            { label:'仓库信息', mod:'warehouse' },
+            { label:'库存查询', mod:'warehouse-inventory' },
+            { label:'入库管理', mod:'warehouse-inbound' },
+            { label:'出库管理', mod:'warehouse-outbound' }
+        ]},
+        { id:'sales', icon:'fa-cash-register', label:'销售管理', color:'rose', submenu:[
+            { label:'销售订单', mod:'sales' },
+            { label:'退货处理', mod:'sales-return' },
+            { label:'销售统计', mod:'sales-stats' }
+        ]},
+        { id:'member', icon:'fa-users', label:'会员管理', color:'cyan', submenu:[
+            { label:'会员档案', mod:'member' },
+            { label:'等级管理', mod:'member-level' },
+            { label:'积分记录', mod:'member-points' }
+        ]},
+        { id:'employee', icon:'fa-user-tie', label:'员工管理', color:'indigo', submenu:[
+            { label:'员工档案', mod:'employee' },
+            { label:'排班考勤', mod:'employee-schedule' },
+            { label:'工资核算', mod:'employee-payroll' }
+        ]},
+        { id:'finance', icon:'fa-coins', label:'财务管理', color:'teal', submenu:[
+            { label:'收银记录', mod:'finance' },
+            { label:'会计凭证', mod:'finance-journal' },
+            { label:'预算与税务', mod:'finance-budget' }
+        ]},
+        { id:'system', icon:'fa-cogs', label:'系统管理', color:'slate', submenu:[
+            { label:'用户与角色', mod:'system' },
+            { label:'权限配置', mod:'system-perm' },
+            { label:'操作日志', mod:'system-log' },
+            { label:'备份与配置', mod:'system-config' }
+        ]}
+    ];
+    container.innerHTML = menus.map(menu => {
+        const hasSub = menu.submenu.length > 0;
+        return `<div class="menu-item px-3 py-2 rounded-2xl cursor-pointer ${menu.id==='dashboard'?'active bg-blue-50':'hover:bg-slate-50'}">
+            <div onclick="event.stopPropagation();toggleMenu(this,'${menu.id}')" class="flex items-center gap-x-3 text-sm font-medium px-1 py-1">
+                <i class="fa-solid ${menu.icon} w-5 text-center text-slate-500"></i>
+                <span class="flex-1">${menu.label}</span>
+                ${hasSub?'<i class="fa-solid fa-chevron-down text-xs text-slate-400 transition-transform"></i>':''}
+            </div>
+            ${hasSub?`<div class="menu-submenu pl-8 pt-1 space-y-0.5 text-xs">${menu.submenu.map(s=>`<div onclick="event.stopPropagation();loadModule('${s.mod}',this)" class="px-3 py-1.5 text-slate-600 hover:text-blue-600 hover:bg-blue-50 rounded-xl cursor-pointer">${s.label}</div>`).join('')}</div>`:''}
+        </div>`;
+    }).join('');
+}
+
+function toggleMenu(el, mid) {
+    const item = el.closest('.menu-item');
+    document.querySelectorAll('.menu-item.open').forEach(e => { if (e!==item) e.classList.remove('open'); });
+    item.classList.toggle('open');
+    const chev = item.querySelector('.fa-chevron-down');
+    if (chev) chev.style.transform = item.classList.contains('open')?'rotate(180deg)':'';
+    const hasSub = item.querySelector('.menu-submenu');
+    if (!hasSub) loadModule(mid, item);
+}
+
+// ==================== 模块路由 ====================
+function loadModule(mod, menuEl) {
+    document.querySelectorAll('#sidebar-menu .menu-item').forEach(e => e.classList.remove('active','bg-blue-50'));
+    if (menuEl && menuEl.closest) {
+        const item = menuEl.closest('.menu-item');
+        if (item) item.classList.add('active','bg-blue-50');
+    }
+    const tblMap = {
+        'dashboard':       getDashboardHTML,
+        'product':         ()=>getTableModuleHTML('product'),
+        'product-category':()=>getTableModuleHTML('product-category'),
+        'product-promo':   ()=>getTableModuleHTML('product-promo'),
+        'supplier':        ()=>getTableModuleHTML('supplier'),
+        'supplier-contract':()=>getTableModuleHTML('supplier-contract'),
+        'supplier-eval':   ()=>getTableModuleHTML('supplier-eval'),
+        'purchase':        ()=>getTableModuleHTML('purchase'),
+        'purchase-inbound':()=>getTableModuleHTML('purchase-inbound'),
+        'warehouse':       ()=>getTableModuleHTML('warehouse'),
+        'warehouse-inventory':()=>getTableModuleHTML('warehouse-inventory'),
+        'warehouse-inbound':()=>getTableModuleHTML('warehouse-inbound'),
+        'warehouse-outbound':()=>getTableModuleHTML('warehouse-outbound'),
+        'sales':           ()=>getTableModuleHTML('sales'),
+        'sales-return':    ()=>getTableModuleHTML('sales-return'),
+        'sales-stats':     ()=>getTableModuleHTML('sales-stats'),
+        'member':          ()=>getTableModuleHTML('member'),
+        'member-level':    ()=>getTableModuleHTML('member-level'),
+        'member-points':   ()=>getTableModuleHTML('member-points'),
+        'employee':        ()=>getTableModuleHTML('employee'),
+        'employee-schedule':()=>getTableModuleHTML('employee-schedule'),
+        'employee-payroll':()=>getTableModuleHTML('employee-payroll'),
+        'finance':         ()=>getTableModuleHTML('finance'),
+        'finance-journal': ()=>getTableModuleHTML('finance-journal'),
+        'finance-budget':  ()=>getTableModuleHTML('finance-budget'),
+        'system':          ()=>getTableModuleHTML('system'),
+        'system-perm':     ()=>getTableModuleHTML('system-perm'),
+        'system-log':      ()=>getTableModuleHTML('system-log'),
+        'system-config':   ()=>getTableModuleHTML('system-config')
+    };
+    const fn = tblMap[mod] || getDashboardHTML;
+    document.getElementById('content-area').innerHTML = fn();
+    setTimeout(() => bindTableEvents(mod), 80);
+}
+
+// ==================== 仪表盘 ====================
+function getDashboardHTML() {
+    return `<div class="max-w-[1200px]">
+        <div class="flex items-end justify-between mb-8">
+            <div><h2 class="text-3xl font-bold text-slate-800">欢迎回来，管理员</h2><p class="text-slate-500 mt-1">今天是 <span class="font-medium">2026年5月25日</span>，系统运行正常</p></div>
+            <div class="px-4 py-1.5 bg-white rounded-2xl text-xs font-medium border flex items-center gap-x-2"><div class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div><span>所有模块数据已同步</span></div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
+            ${['今日销售额|¥128,560|+12.5%|较昨日|emerald|fa-yen-sign',
+               '库存预警商品|23|需要补货||amber|fa-exclamation-triangle',
+               '活跃会员|1,245|+38|本周新增|blue|fa-users',
+               '待审批采购|5|总金额 ¥42,800||violet|fa-file-invoice'].map(k=>{
+                const [t,v,ch,sub,c,icon] = k.split('|');
+                return `<div class="kpi-card bg-white p-6 rounded-3xl border border-slate-100 shadow-sm"><div class="flex justify-between"><div><div class="text-xs text-${c}-600 font-semibold tracking-wider">${t}</div><div class="text-4xl font-bold text-slate-800 mt-3">${v}</div><div class="text-${c}-600 text-sm mt-2">${ch?`<span class="font-medium">${ch}</span> `:''}${sub}</div></div><div class="w-12 h-12 bg-${c}-100 rounded-2xl flex items-center justify-center"><i class="fa-solid ${icon} text-${c}-600 text-3xl"></i></div></div></div>`;
+            }).join('')}
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-5 gap-5">
+            <div class="lg:col-span-3 bg-white rounded-3xl border border-slate-100 p-6">
+                <div class="font-semibold mb-4 flex items-center gap-x-2"><i class="fa-solid fa-bullhorn text-emerald-600"></i><span>公告信息</span></div>
+                <div class="space-y-3 text-sm">
+                    <div class="flex gap-x-3 p-3 bg-emerald-50 rounded-2xl"><div class="text-emerald-600 mt-0.5"><i class="fa-solid fa-tag"></i></div><div class="flex-1"><div class="font-medium">本周促销活动：全场饮品满100减25</div><div class="text-xs text-emerald-600/70 mt-0.5">2026-05-25 09:00 · 有效期至6月1日</div></div></div>
+                    <div class="flex gap-x-3 p-3 bg-amber-50 rounded-2xl"><div class="text-amber-600 mt-0.5"><i class="fa-solid fa-tools"></i></div><div class="flex-1"><div class="font-medium">系统将于今晚22:00进行例行维护，预计30分钟</div><div class="text-xs text-amber-600/70 mt-0.5">2026-05-25 14:20 · 请提前做好数据备份</div></div></div>
+                </div>
+            </div>
+            <div class="lg:col-span-2 bg-white rounded-3xl border border-slate-100 p-6">
+                <div class="font-semibold mb-4 flex items-center gap-x-2"><i class="fa-solid fa-bolt text-blue-600"></i><span>快捷操作</span></div>
+                <div class="grid grid-cols-2 gap-3 text-sm">
+                    <button onclick="quickAction('new-sale')" class="flex items-center gap-x-3 p-3 hover:bg-blue-50 rounded-2xl text-left transition-colors border border-transparent hover:border-blue-200"><i class="fa-solid fa-plus-circle text-blue-600 text-xl w-6"></i><div><div class="font-medium">新建销售</div><div class="text-xs text-slate-500">快速收银</div></div></button>
+                    <button onclick="quickAction('new-purchase')" class="flex items-center gap-x-3 p-3 hover:bg-emerald-50 rounded-2xl text-left transition-colors border border-transparent hover:border-emerald-200"><i class="fa-solid fa-truck-loading text-emerald-600 text-xl w-6"></i><div><div class="font-medium">新建采购</div><div class="text-xs text-slate-500">供应商订货</div></div></button>
+                </div>
+            </div>
+        </div>
+    </div>`;
+}
+
+// ==================== 通用表格模块生成器 ====================
+const MODULE_DEFS = {
+    'product': {
+        title:'商品管理', desc:'对应表：products / categories / product_prices / promotions', color:'blue',
+        searchPlaceholder:'搜索商品名称或规格...',
+        filters: [{label:'全部状态',value:''},{label:'在售',value:'active'},{label:'下架',value:'inactive'},{label:'停产',value:'discontinued'}],
+        columns: ['ID','商品名称','分类','供应商','基础价格','库存','状态','操作'],
+        dataKey: 'products',
+        addLabel: '新增商品'
+    },
+    'product-category': {
+        title:'商品分类管理', desc:'对应表：categories', color:'blue',
+        searchPlaceholder:'搜索分类名称...',
+        filters: [],
+        columns: ['ID','分类名称','父分类','排序号','描述','操作'],
+        dataKey: 'categories',
+        addLabel: '新增分类'
+    },
+    'product-promo': {
+        title:'促销活动管理', desc:'对应表：promotions / promotion_products', color:'blue',
+        searchPlaceholder:'搜索促销名称...',
+        filters: [{label:'全部状态',value:''},{label:'进行中',value:'active'},{label:'已结束',value:'ended'},{label:'待审批',value:'pending'}],
+        columns: ['ID','促销名称','类型','折扣/减免','开始日期','结束日期','状态','操作'],
+        dataKey: 'promotions',
+        addLabel: '新增促销'
+    },
+    'supplier': {
+        title:'供应商档案管理', desc:'对应表：suppliers', color:'emerald',
+        searchPlaceholder:'搜索供应商名称...',
+        filters: [],
+        columns: ['ID','供应商名称','联系人','联系电话','地址','信用等级','操作'],
+        dataKey: 'suppliers',
+        addLabel: '新增供应商'
+    },
+    'supplier-contract': {
+        title:'供应商合同管理', desc:'对应表：supplier_contracts', color:'emerald',
+        searchPlaceholder:'搜索合同编号...',
+        filters: [{label:'全部状态',value:''},{label:'生效中',value:'active'},{label:'已终止',value:'terminated'},{label:'已过期',value:'expired'}],
+        columns: ['ID','合同编号','供应商','合同类型','开始日期','结束日期','总金额','状态','操作'],
+        dataKey: 'supplierContracts',
+        addLabel: '新增合同'
+    },
+    'supplier-eval': {
+        title:'供应商评价管理', desc:'对应表：supplier_evaluations', color:'emerald',
+        searchPlaceholder:'搜索供应商...',
+        filters: [],
+        columns: ['ID','供应商','评价人','总评分','质量','交付','服务','评价日期','操作'],
+        dataKey: 'supplierEvals',
+        addLabel: '新增评价'
+    },
+    'purchase': {
+        title:'采购订单管理', desc:'对应表：purchase_orders / purchase_order_items', color:'amber',
+        searchPlaceholder:'搜索订单编号...',
+        filters: [{label:'全部状态',value:''},{label:'草稿',value:'draft'},{label:'已审批',value:'approved'},{label:'已收货',value:'received'},{label:'已完成',value:'completed'}],
+        columns: ['ID','订单编号','供应商','订单日期','总金额','预计到货','状态','操作'],
+        dataKey: 'purchaseOrders',
+        addLabel: '新建采购订单'
+    },
+    'purchase-inbound': {
+        title:'入库验收管理', desc:'对应表：inbound_records / inbound_items', color:'amber',
+        searchPlaceholder:'搜索入库单号...',
+        filters: [{label:'全部状态',value:''},{label:'待验收',value:'inspecting'},{label:'已入库',value:'completed'}],
+        columns: ['ID','入库单号','供应商','仓库','总数量','入库日期','状态','操作'],
+        dataKey: 'inboundRecords',
+        addLabel: '新建入库单'
+    },
+    'warehouse': {
+        title:'仓库信息管理', desc:'对应表：warehouses', color:'violet',
+        searchPlaceholder:'搜索仓库名称...',
+        filters: [],
+        columns: ['ID','仓库名称','位置','容量','状态','操作'],
+        dataKey: 'warehouses',
+        addLabel: '新增仓库'
+    },
+    'warehouse-inventory': {
+        title:'库存查询', desc:'对应表：inventory_details / inventory', color:'violet',
+        searchPlaceholder:'搜索商品或批次...',
+        filters: [{label:'全部状态',value:''},{label:'正常',value:'normal'},{label:'低库存',value:'low_stock'},{label:'临期',value:'near_expiry'}],
+        columns: ['ID','商品名称','仓库','批次号','数量','库位','有效期','状态','操作'],
+        dataKey: 'inventoryDetails',
+        addLabel: '库存调整'
+    },
+    'warehouse-inbound': {
+        title:'入库记录管理', desc:'对应表：inbound_records', color:'violet',
+        searchPlaceholder:'搜索入库单号...',
+        filters: [{label:'全部状态',value:''},{label:'已完成',value:'completed'},{label:'待审核',value:'pending'}],
+        columns: ['ID','入库单号','供应商','仓库','总数量','入库时间','状态','操作'],
+        dataKey: 'inboundRecords2',
+        addLabel: '新建入库'
+    },
+    'warehouse-outbound': {
+        title:'出库记录管理', desc:'对应表：outbound_records', color:'violet',
+        searchPlaceholder:'搜索出库单号...',
+        filters: [{label:'全部状态',value:''},{label:'已完成',value:'completed'},{label:'拣货中',value:'picking'}],
+        columns: ['ID','出库单号','关联订单','仓库','总数量','出库时间','状态','操作'],
+        dataKey: 'outboundRecords',
+        addLabel: '新建出库'
+    },
+    'sales': {
+        title:'销售订单管理', desc:'对应表：sales_orders / sales_order_items', color:'rose',
+        searchPlaceholder:'搜索订单编号...',
+        filters: [{label:'全部状态',value:''},{label:'已完成',value:'completed'},{label:'已退款',value:'refunded'},{label:'已取消',value:'cancelled'}],
+        columns: ['ID','订单编号','会员','收银员','总金额','支付方式','订单时间','状态','操作'],
+        dataKey: 'salesOrders',
+        addLabel: '新建销售订单'
+    },
+    'sales-return': {
+        title:'销售退货管理', desc:'对应表：sales_returns / sales_return_items', color:'rose',
+        searchPlaceholder:'搜索原订单编号...',
+        filters: [{label:'全部状态',value:''},{label:'待审批',value:'pending'},{label:'已完成',value:'completed'},{label:'已拒绝',value:'rejected'}],
+        columns: ['ID','原订单','会员','处理人','退款金额','退货原因','退货时间','状态','操作'],
+        dataKey: 'salesReturns',
+        addLabel: '新建退货'
+    },
+    'sales-stats': {
+        title:'销售统计报表', desc:'对应表：sales_statistics / product_sales_rankings', color:'rose',
+        searchPlaceholder:'搜索统计周期...',
+        filters: [],
+        columns: ['ID','统计周期','销售总额','订单数量','商品种类','操作'],
+        dataKey: 'salesStats',
+        addLabel: '生成报表'
+    },
+    'member': {
+        title:'会员档案管理', desc:'对应表：members', color:'cyan',
+        searchPlaceholder:'搜索会员姓名或卡号...',
+        filters: [{label:'全部状态',value:''},{label:'正常',value:'active'},{label:'停用',value:'inactive'},{label:'黑名单',value:'blacklisted'}],
+        columns: ['ID','会员卡号','姓名','电话','等级','积分余额','注册日期','状态','操作'],
+        dataKey: 'members',
+        addLabel: '新增会员'
+    },
+    'member-level': {
+        title:'会员等级管理', desc:'对应表：member_levels', color:'cyan',
+        searchPlaceholder:'搜索等级名称...',
+        filters: [],
+        columns: ['ID','等级名称','升级条件','折扣率','积分倍率','描述','操作'],
+        dataKey: 'memberLevels',
+        addLabel: '新增等级'
+    },
+    'member-points': {
+        title:'积分记录查询', desc:'对应表：member_points_records / points_policies', color:'cyan',
+        searchPlaceholder:'搜索会员...',
+        filters: [{label:'全部类型',value:''},{label:'消费获得',value:'consume'},{label:'兑换',value:'redeem'},{label:'活动赠送',value:'activity'}],
+        columns: ['ID','会员','积分变化','变化类型','关联订单','日期','备注','操作'],
+        dataKey: 'memberPoints',
+        addLabel: '手动调整积分'
+    },
+    'employee': {
+        title:'员工档案管理', desc:'对应表：employees / positions', color:'indigo',
+        searchPlaceholder:'搜索员工姓名或工号...',
+        filters: [{label:'全部状态',value:''},{label:'在职',value:'active'},{label:'离职',value:'resigned'}],
+        columns: ['ID','工号','姓名','部门','岗位','电话','入职日期','状态','操作'],
+        dataKey: 'employees',
+        addLabel: '新增员工'
+    },
+    'employee-schedule': {
+        title:'排班考勤管理', desc:'对应表：schedules / attendances', color:'indigo',
+        searchPlaceholder:'搜索员工姓名...',
+        filters: [{label:'全部班次',value:''},{label:'早班',value:'morning'},{label:'中班',value:'afternoon'},{label:'晚班',value:'night'}],
+        columns: ['ID','员工','工作日期','班次','时间','考勤状态','备注','操作'],
+        dataKey: 'schedules',
+        addLabel: '新增排班'
+    },
+    'employee-payroll': {
+        title:'工资核算管理', desc:'对应表：payrolls', color:'indigo',
+        searchPlaceholder:'搜索员工或工资周期...',
+        filters: [{label:'全部状态',value:''},{label:'待发放',value:'pending'},{label:'已发放',value:'paid'}],
+        columns: ['ID','员工','工资周期','基本工资','奖金','扣款','实发','状态','操作'],
+        dataKey: 'payrolls',
+        addLabel: '生成工资单'
+    },
+    'finance': {
+        title:'收银记录管理', desc:'对应表：cash_records', color:'teal',
+        searchPlaceholder:'搜索订单号...',
+        filters: [{label:'全部状态',value:''},{label:'成功',value:'success'},{label:'已退款',value:'refunded'}],
+        columns: ['ID','订单ID','收银员','金额','支付方式','交易时间','状态','操作'],
+        dataKey: 'cashRecords',
+        addLabel: '查看详情'
+    },
+    'finance-journal': {
+        title:'会计凭证管理', desc:'对应表：journal_entries / accounts', color:'teal',
+        searchPlaceholder:'搜索凭证号...',
+        filters: [{label:'全部状态',value:''},{label:'草稿',value:'draft'},{label:'已过账',value:'posted'}],
+        columns: ['ID','凭证号','记账日期','摘要','借方合计','贷方合计','状态','操作'],
+        dataKey: 'journalEntries',
+        addLabel: '新建凭证'
+    },
+    'finance-budget': {
+        title:'预算与税务管理', desc:'对应表：budgets / tax_declarations / cost_records', color:'teal',
+        searchPlaceholder:'搜索预算期间...',
+        filters: [],
+        columns: ['ID','预算期间','科目','计划金额','实际金额','差异','状态','操作'],
+        dataKey: 'budgets',
+        addLabel: '新建预算'
+    },
+    'system': {
+        title:'用户与角色管理', desc:'对应表：users / roles / user_roles', color:'slate',
+        searchPlaceholder:'搜索用户名...',
+        filters: [{label:'全部状态',value:''},{label:'正常',value:'active'},{label:'停用',value:'inactive'},{label:'锁定',value:'locked'}],
+        columns: ['ID','用户名','关联员工','角色','最后登录','状态','操作'],
+        dataKey: 'users',
+        addLabel: '新增用户'
+    },
+    'system-perm': {
+        title:'权限配置管理', desc:'对应表：permissions / role_permissions', color:'slate',
+        searchPlaceholder:'搜索权限代码...',
+        filters: [],
+        columns: ['ID','权限代码','权限名称','所属模块','描述','操作'],
+        dataKey: 'permissions',
+        addLabel: '新增权限'
+    },
+    'system-log': {
+        title:'系统日志管理', desc:'对应表：system_logs / operation_logs', color:'slate',
+        searchPlaceholder:'搜索模块或操作...',
+        filters: [{label:'全部类型',value:''},{label:'操作日志',value:'operation'},{label:'登录日志',value:'login'},{label:'异常日志',value:'exception'}],
+        columns: ['ID','日志类型','模块','操作','用户','IP地址','时间','操作'],
+        dataKey: 'systemLogs',
+        addLabel: '导出日志'
+    },
+    'system-config': {
+        title:'备份与系统配置', desc:'对应表：backup_records / system_configs', color:'slate',
+        searchPlaceholder:'搜索配置键...',
+        filters: [],
+        columns: ['ID','配置键','配置值','类型','描述','更新时间','操作'],
+        dataKey: 'systemConfigs',
+        addLabel: '新增配置'
+    }
+};
+
+// ==================== 表格HTML生成 ====================
+function getTableModuleHTML(modKey) {
+    const def = MODULE_DEFS[modKey];
+    if (!def) return `<div class="p-10 text-center text-slate-400">模块 "${modKey}" 未定义</div>`;
+    const filterHTML = def.filters.length > 0 ? `<select id="filter-${modKey}" class="px-4 py-3 border border-slate-200 rounded-2xl text-sm bg-white" onchange="filterTable('${modKey}')">${def.filters.map(f=>`<option value="${f.value}">${f.label}</option>`).join('')}</select>` : '';
+    return `<div class="max-w-[1300px]">
+        <div class="flex items-center justify-between mb-6">
+            <div><h3 class="text-2xl font-bold text-slate-800">${def.title}</h3><p class="text-sm text-slate-500 mt-0.5">${def.desc}</p></div>
+            <button onclick="showAddModal('${modKey}')" class="flex items-center gap-x-2 px-5 py-2.5 bg-${def.color}-600 hover:bg-${def.color}-700 text-white rounded-2xl text-sm font-semibold shadow-lg shadow-${def.color}-600/30 transition-all"><i class="fa-solid fa-plus"></i><span>${def.addLabel}</span></button>
+        </div>
+        <div class="flex gap-x-3 mb-5">
+            <div class="flex-1 relative">
+                <input id="search-${modKey}" type="text" placeholder="${def.searchPlaceholder}" class="w-full pl-11 pr-4 py-3 bg-white border border-slate-200 rounded-2xl text-sm focus:border-blue-500 focus:ring-1" onkeyup="filterTable('${modKey}')">
+                <i class="fa-solid fa-search absolute left-4 top-4 text-slate-400"></i>
+            </div>
+            ${filterHTML}
+        </div>
+        <div class="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden">
+            <table class="w-full modern-table text-sm">
+                <thead><tr>${def.columns.map(c=>`<th class="px-5 py-4 text-left font-semibold">${c}</th>`).join('')}</tr></thead>
+                <tbody id="tbody-${modKey}" class="divide-y divide-slate-100"></tbody>
+            </table>
+        </div>
+        <div class="mt-4 text-xs text-slate-400 flex items-center justify-between px-1"><div id="count-${modKey}"></div><div>数据来源：${def.desc}</div></div>
+    </div>`;
+}
+
+// ==================== 示例数据 ====================
+const SAMPLE_DATA = {
+    products: [
+        { id:1001, name:'新疆红富士苹果', category:'水果', supplier:'新疆果业', price:'8.50', stock:230, status:'active', spec:'5kg/箱' },
+        { id:1002, name:'泰国金枕头榴莲', category:'水果', supplier:'东南亚进口', price:'68.00', stock:45, status:'active', spec:'3-4kg/个' },
+        { id:1003, name:'伊利纯牛奶250ml', category:'乳制品', supplier:'伊利集团', price:'3.80', stock:500, status:'active', spec:'24盒/箱' },
+        { id:1004, name:'农夫山泉矿泉水', category:'饮料', supplier:'农夫山泉', price:'1.50', stock:0, status:'inactive', spec:'550ml*24' },
+        { id:1005, name:'五常大米5kg', category:'粮油', supplier:'五常米业', price:'42.00', stock:180, status:'active', spec:'5kg/袋' },
+        { id:1006, name:'可口可乐330ml', category:'饮料', supplier:'可口可乐', price:'2.80', stock:320, status:'active', spec:'24罐/箱' },
+        { id:1007, name:'蒙牛酸奶100g*8', category:'乳制品', supplier:'蒙牛集团', price:'12.90', stock:150, status:'active', spec:'8杯/组' },
+        { id:1008, name:'金龙鱼调和油5L', category:'粮油', supplier:'金龙鱼', price:'68.00', stock:90, status:'active', spec:'5L/桶' }
+    ],
+    categories: [
+        { id:1, name:'水果', parent:'无', sort:1, desc:'新鲜水果类' },
+        { id:2, name:'蔬菜', parent:'无', sort:2, desc:'新鲜蔬菜类' },
+        { id:3, name:'乳制品', parent:'无', sort:3, desc:'奶制品及酸奶' },
+        { id:4, name:'饮料', parent:'无', sort:4, desc:'各类饮品' },
+        { id:5, name:'粮油', parent:'无', sort:5, desc:'米面粮油' },
+        { id:6, name:'进口水果', parent:'水果', sort:6, desc:'进口精品水果' }
+    ],
+    promotions: [
+        { id:1, name:'端午特惠', type:'discount', discount:'0.85', start:'2026-05-20', end:'2026-06-05', status:'active' },
+        { id:2, name:'满100减25', type:'full_reduction', discount:'¥25.00', start:'2026-05-11', end:'2026-05-18', status:'ended' },
+        { id:3, name:'买一赠一', type:'buy_gift', discount:'赠品', start:'2026-06-01', end:'2026-06-30', status:'pending' }
+    ],
+    suppliers: [
+        { id:1, name:'新疆果业', contact:'张三', phone:'13800001001', address:'新疆乌鲁木齐市天山区', credit:'A级' },
+        { id:2, name:'伊利集团', contact:'李四', phone:'13800001002', address:'内蒙古呼和浩特市', credit:'A级' },
+        { id:3, name:'农夫山泉', contact:'王五', phone:'13800001003', address:'浙江省杭州市', credit:'A级' },
+        { id:4, name:'五常米业', contact:'赵六', phone:'13800001004', address:'黑龙江省五常市', credit:'B级' },
+        { id:5, name:'可口可乐', contact:'钱七', phone:'13800001005', address:'上海市浦东新区', credit:'A级' },
+        { id:6, name:'东南亚进口', contact:'孙八', phone:'13800001006', address:'广西南宁市', credit:'B级' }
+    ],
+    supplierContracts: [
+        { id:1, contractNo:'CT-2026-001', supplier:'新疆果业', type:'年度供货', start:'2026-01-01', end:'2026-12-31', amount:'500,000', status:'active' },
+        { id:2, contractNo:'CT-2026-002', supplier:'伊利集团', type:'季度供货', start:'2026-04-01', end:'2026-06-30', amount:'300,000', status:'active' },
+        { id:3, contractNo:'CT-2026-003', supplier:'五常米业', type:'单次采购', start:'2026-05-01', end:'2026-05-31', amount:'80,000', status:'expired' }
+    ],
+    supplierEvals: [
+        { id:1, supplier:'新疆果业', evaluator:'刘锦行', score:'4.5', quality:'4.5', delivery:'4.3', service:'4.6', date:'2026-04-15' },
+        { id:2, supplier:'伊利集团', evaluator:'张经理', score:'4.8', quality:'5.0', delivery:'4.7', service:'4.8', date:'2026-04-20' },
+        { id:3, supplier:'五常米业', evaluator:'李主管', score:'3.8', quality:'4.0', delivery:'3.5', service:'3.8', date:'2026-03-10' }
+    ],
+    purchaseOrders: [
+        { id:1, orderNo:'PO-2026-001', supplier:'新疆果业', date:'2026-05-20', amount:'15,800', delivery:'2026-05-25', status:'approved' },
+        { id:2, orderNo:'PO-2026-002', supplier:'伊利集团', date:'2026-05-21', amount:'8,500', delivery:'2026-05-27', status:'draft' },
+        { id:3, orderNo:'PO-2026-003', supplier:'农夫山泉', date:'2026-05-22', amount:'22,000', delivery:'2026-05-30', status:'received' },
+        { id:4, orderNo:'PO-2026-004', supplier:'可口可乐', date:'2026-05-23', amount:'12,300', delivery:'2026-05-28', status:'completed' }
+    ],
+    inboundRecords: [
+        { id:1, inboundNo:'IN-2026-001', supplier:'新疆果业', warehouse:'1号仓库', qty:500, date:'2026-05-21 14:30', status:'completed' },
+        { id:2, inboundNo:'IN-2026-002', supplier:'伊利集团', warehouse:'2号仓库', qty:300, date:'2026-05-22 10:00', status:'inspecting' }
+    ],
+    warehouses: [
+        { id:1, name:'1号仓库', location:'超市地下一层A区', capacity:5000, status:'active' },
+        { id:2, name:'2号仓库', location:'超市地下一层B区', capacity:3000, status:'active' },
+        { id:3, name:'冷链仓库', location:'超市后院', capacity:1000, status:'full' },
+        { id:4, name:'备用仓库', location:'物流园区3号', capacity:8000, status:'maintenance' }
+    ],
+    inventoryDetails: [
+        { id:1, product:'新疆红富士苹果', warehouse:'1号仓库', batch:'B2026-0515', qty:230, bin:'A-01-03', expiry:'2026-06-15', status:'normal' },
+        { id:2, product:'泰国金枕头榴莲', warehouse:'冷链仓库', batch:'B2026-0520', qty:45, bin:'C-02-01', expiry:'2026-05-30', status:'near_expiry' },
+        { id:3, product:'伊利纯牛奶250ml', warehouse:'2号仓库', batch:'B2026-0518', qty:8, bin:'B-03-05', expiry:'2026-06-18', status:'low_stock' },
+        { id:4, product:'五常大米5kg', warehouse:'1号仓库', batch:'B2026-0401', qty:180, bin:'A-05-02', expiry:'2027-04-01', status:'normal' }
+    ],
+    inboundRecords2: [
+        { id:1, inboundNo:'IN-2026-001', supplier:'新疆果业', warehouse:'1号仓库', qty:500, date:'2026-05-21 14:30', status:'completed' },
+        { id:2, inboundNo:'IN-2026-002', supplier:'伊利集团', warehouse:'2号仓库', qty:300, date:'2026-05-22 10:00', status:'completed' },
+        { id:3, inboundNo:'IN-2026-003', supplier:'农夫山泉', warehouse:'1号仓库', qty:800, date:'2026-05-23 09:00', status:'pending' }
+    ],
+    outboundRecords: [
+        { id:1, outboundNo:'OUT-2026-001', orderLink:'SO-2026-0015', warehouse:'1号仓库', qty:120, date:'2026-05-24 16:00', status:'completed' },
+        { id:2, outboundNo:'OUT-2026-002', orderLink:'SO-2026-0018', warehouse:'2号仓库', qty:85, date:'2026-05-25 08:30', status:'picking' },
+        { id:3, outboundNo:'OUT-2026-003', orderLink:'SO-2026-0021', warehouse:'冷链仓库', qty:30, date:'2026-05-25 11:00', status:'pending' }
+    ],
+    salesOrders: [
+        { id:1, orderNo:'SO-2026-0015', member:'王会员', cashier:'张收银', amount:'156.80', method:'微信支付', time:'2026-05-25 10:30', status:'completed' },
+        { id:2, orderNo:'SO-2026-0016', member:'非会员', cashier:'李收银', amount:'42.00', method:'现金', time:'2026-05-25 11:15', status:'completed' },
+        { id:3, orderNo:'SO-2026-0017', member:'赵会员', cashier:'张收银', amount:'238.50', method:'支付宝', time:'2026-05-25 11:45', status:'completed' },
+        { id:4, orderNo:'SO-2026-0018', member:'非会员', cashier:'王收银', amount:'18.90', method:'微信支付', time:'2026-05-25 12:00', status:'refunded' },
+        { id:5, orderNo:'SO-2026-0019', member:'陈会员', cashier:'李收银', amount:'520.00', method:'会员卡', time:'2026-05-25 12:30', status:'cancelled' }
+    ],
+    salesReturns: [
+        { id:1, origOrder:'SO-2026-0018', member:'非会员', handler:'刘锦行', amount:'18.90', reason:'商品过期', time:'2026-05-25 12:30', status:'completed' },
+        { id:2, origOrder:'SO-2026-0012', member:'周会员', handler:'张经理', amount:'35.00', reason:'包装破损', time:'2026-05-25 09:00', status:'pending' }
+    ],
+    salesStats: [
+        { id:1, period:'2026-05-25', amount:'¥28,560.00', orders:156, products:89 },
+        { id:2, period:'2026-05-24', amount:'¥25,340.00', orders:142, products:82 },
+        { id:3, period:'2026-05-W4', amount:'¥98,750.00', orders:520, products:105 },
+        { id:4, period:'2026-05', amount:'¥385,200.00', orders:2100, products:128 }
+    ],
+    members: [
+        { id:1, cardNo:'VIP-20260001', name:'王会员', phone:'13900001001', level:'金卡会员', points:5200, regDate:'2025-03-15', status:'active' },
+        { id:2, cardNo:'VIP-20260002', name:'赵会员', phone:'13900001002', level:'银卡会员', points:1800, regDate:'2025-06-20', status:'active' },
+        { id:3, cardNo:'VIP-20260003', name:'陈会员', phone:'13900001003', level:'金卡会员', points:8900, regDate:'2024-11-08', status:'active' },
+        { id:4, cardNo:'VIP-20260004', name:'周会员', phone:'13900001004', level:'普通会员', points:320, regDate:'2026-01-10', status:'inactive' },
+        { id:5, cardNo:'VIP-20260005', name:'吴会员', phone:'13900001005', level:'普通会员', points:0, regDate:'2026-04-05', status:'blacklisted' }
+    ],
+    memberLevels: [
+        { id:1, name:'普通会员', cond:'注册即享', discount:'1.00', multi:'1.0', desc:'基础会员权益，消费积累积分' },
+        { id:2, name:'银卡会员', cond:'年消费满5000元', discount:'0.95', multi:'1.2', desc:'享受9.5折优惠，积分加速20%' },
+        { id:3, name:'金卡会员', cond:'年消费满20000元', discount:'0.90', multi:'1.5', desc:'享受9折优惠，积分加速50%，生日双倍积分' }
+    ],
+    memberPoints: [
+        { id:1, member:'王会员', change:'+500', type:'consume', orderLink:'SO-2026-0015', date:'2026-05-25', note:'消费获得积分' },
+        { id:2, member:'赵会员', change:'-200', type:'redeem', orderLink:'-', date:'2026-05-20', note:'兑换50元优惠券' },
+        { id:3, member:'陈会员', change:'+1000', type:'activity', orderLink:'-', date:'2026-05-15', note:'端午节活动赠送' },
+        { id:4, member:'王会员', change:'+300', type:'refund', orderLink:'SO-2026-0012', date:'2026-05-10', note:'退货返还积分' }
+    ],
+    employees: [
+        { id:1, no:'EMP001', name:'刘锦行', dept:'管理部', position:'系统管理员', phone:'13800002001', hire:'2024-01-15', status:'active' },
+        { id:2, no:'EMP002', name:'张经理', dept:'运营部', position:'运营经理', phone:'13800002002', hire:'2024-02-20', status:'active' },
+        { id:3, no:'EMP003', name:'李主管', dept:'仓储部', position:'仓库主管', phone:'13800002003', hire:'2024-03-10', status:'active' },
+        { id:4, no:'EMP004', name:'张收银', dept:'销售部', position:'收银员', phone:'13800002004', hire:'2024-05-01', status:'active' },
+        { id:5, no:'EMP005', name:'李收银', dept:'销售部', position:'收银员', phone:'13800002005', hire:'2024-06-15', status:'active' },
+        { id:6, no:'EMP006', name:'王收银', dept:'销售部', position:'收银员', phone:'13800002006', hire:'2025-01-10', status:'active' },
+        { id:7, no:'EMP007', name:'赵采购', dept:'采购部', position:'采购专员', phone:'13800002007', hire:'2024-08-20', status:'active' },
+        { id:8, no:'EMP008', name:'钱会计', dept:'财务部', position:'会计', phone:'13800002008', hire:'2024-04-05', status:'resigned' }
+    ],
+    schedules: [
+        { id:1, emp:'张收银', date:'2026-05-25', shift:'morning', time:'08:00-16:00', attStatus:'normal', note:'' },
+        { id:2, emp:'李收银', date:'2026-05-25', shift:'afternoon', time:'14:00-22:00', attStatus:'late', note:'迟到15分钟' },
+        { id:3, emp:'王收银', date:'2026-05-25', shift:'night', time:'22:00-06:00', attStatus:'normal', note:'' },
+        { id:4, emp:'赵采购', date:'2026-05-25', shift:'morning', time:'08:00-16:00', attStatus:'absent', note:'请假' }
+    ],
+    payrolls: [
+        { id:1, emp:'刘锦行', period:'2026-05', base:'8,000', bonus:'2,000', ded:'500', net:'9,500', status:'paid' },
+        { id:2, emp:'张经理', period:'2026-05', base:'10,000', bonus:'3,000', ded:'800', net:'12,200', status:'paid' },
+        { id:3, emp:'张收银', period:'2026-05', base:'4,500', bonus:'800', ded:'200', net:'5,100', status:'pending' },
+        { id:4, emp:'李收银', period:'2026-05', base:'4,500', bonus:'500', ded:'300', net:'4,700', status:'pending' }
+    ],
+    cashRecords: [
+        { id:1, orderId:'SO-2026-0015', emp:'张收银', amount:'156.80', method:'微信支付', time:'2026-05-25 10:30', status:'success' },
+        { id:2, orderId:'SO-2026-0016', emp:'李收银', amount:'42.00', method:'现金', time:'2026-05-25 11:15', status:'success' },
+        { id:3, orderId:'SO-2026-0017', emp:'张收银', amount:'238.50', method:'支付宝', time:'2026-05-25 11:45', status:'success' },
+        { id:4, orderId:'SO-2026-0018', emp:'王收银', amount:'18.90', method:'微信支付', time:'2026-05-25 12:00', status:'refunded' }
+    ],
+    journalEntries: [
+        { id:1, voucherNo:'JV-2026-001', date:'2026-05-25', desc:'采购新疆果业水果一批', debit:'15,800.00', credit:'15,800.00', status:'posted' },
+        { id:2, voucherNo:'JV-2026-002', date:'2026-05-25', desc:'伊利牛奶入库记账', debit:'8,500.00', credit:'8,500.00', status:'posted' },
+        { id:3, voucherNo:'JV-2026-003', date:'2026-05-26', desc:'计提本月员工工资', debit:'45,000.00', credit:'45,000.00', status:'draft' }
+    ],
+    budgets: [
+        { id:1, period:'2026-05', account:'采购成本', planned:'200,000', actual:'185,200', variance:'-14,800', status:'executing' },
+        { id:2, period:'2026-05', account:'人力成本', planned:'80,000', actual:'78,500', variance:'-1,500', status:'executing' },
+        { id:3, period:'2026-05', account:'运营费用', planned:'35,000', actual:'36,200', variance:'+1,200', status:'executing' },
+        { id:4, period:'2026-06', account:'采购成本', planned:'180,000', actual:'0', variance:'-', status:'draft' }
+    ],
+    users: [
+        { id:1, username:'admin', emp:'刘锦行', role:'系统管理员', lastLogin:'2026-05-25 08:30', status:'active' },
+        { id:2, username:'zhangjl', emp:'张经理', role:'运营经理', lastLogin:'2026-05-25 09:00', status:'active' },
+        { id:3, username:'lishg', emp:'李主管', role:'仓库管理员', lastLogin:'2026-05-24 17:00', status:'active' },
+        { id:4, username:'zhangsy', emp:'张收银', role:'收银员', lastLogin:'2026-05-25 08:00', status:'active' },
+        { id:5, username:'qiankj', emp:'钱会计', role:'财务人员', lastLogin:'2026-05-20 16:00', status:'locked' }
+    ],
+    permissions: [
+        { id:1, code:'product:view', name:'查看商品', module:'商品管理', desc:'允许查看商品列表和详情' },
+        { id:2, code:'product:create', name:'新增商品', module:'商品管理', desc:'允许新增商品' },
+        { id:3, code:'product:edit', name:'编辑商品', module:'商品管理', desc:'允许编辑商品信息' },
+        { id:4, code:'product:delete', name:'删除商品', module:'商品管理', desc:'允许删除商品' },
+        { id:5, code:'supplier:view', name:'查看供应商', module:'供应商管理', desc:'允许查看供应商信息' },
+        { id:6, code:'system:admin', name:'系统管理', module:'系统管理', desc:'完全系统管理权限' }
+    ],
+    systemLogs: [
+        { id:1, type:'login', module:'系统', action:'用户登录', user:'admin', ip:'192.168.1.100', time:'2026-05-25 08:30' },
+        { id:2, type:'operation', module:'商品管理', action:'新增商品', user:'admin', ip:'192.168.1.100', time:'2026-05-25 09:15' },
+        { id:3, type:'operation', module:'采购管理', action:'审批采购单', user:'admin', ip:'192.168.1.100', time:'2026-05-25 10:00' },
+        { id:4, type:'exception', module:'销售管理', action:'支付超时', user:'zhangsy', ip:'192.168.1.50', time:'2026-05-25 11:45' },
+        { id:5, type:'audit', module:'系统管理', action:'修改权限', user:'admin', ip:'192.168.1.100', time:'2026-05-25 14:00' }
+    ],
+    systemConfigs: [
+        { id:1, key:'system.version', value:'v2.6.0', type:'system', desc:'系统版本号', updateTime:'2026-05-20' },
+        { id:2, key:'ui.theme', value:'default', type:'ui', desc:'界面主题', updateTime:'2026-05-15' },
+        { id:3, key:'business.points_rate', value:'0.01', type:'business', desc:'积分获取比例(元/分)', updateTime:'2026-05-01' },
+        { id:4, key:'system.backup_time', value:'02:00', type:'system', desc:'自动备份时间', updateTime:'2026-04-30' }
+    ]
+};
+
+// ==================== 表格渲染 ====================
+const RENDERERS = {
+    'product': function(data, modKey) {
+        return data.map(d=>`<tr class="data-table-row">
+            <td class="px-5 py-4 font-mono text-xs text-slate-400">${d.id}</td>
+            <td class="px-5 py-4"><div class="font-medium text-slate-800">${d.name}</div><div class="text-xs text-slate-400">${d.spec||''}</div></td>
+            <td class="px-5 py-4 text-slate-600">${d.category}</td>
+            <td class="px-5 py-4 text-slate-600">${d.supplier}</td>
+            <td class="px-5 py-4 text-right font-semibold text-emerald-600">¥${d.price}</td>
+            <td class="px-5 py-4"><span class="inline-block w-16 text-right font-mono ${d.stock<=10?'text-red-600 font-bold':d.stock<=50?'text-amber-600':'text-slate-600'}">${d.stock}</span></td>
+            <td class="px-5 py-4"><span class="inline-block px-3 py-0.5 text-xs font-medium rounded-full ${d.status==='active'?'status-active':d.status==='inactive'?'status-inactive':'status-danger'}">${d.status==='active'?'在售':d.status==='inactive'?'下架':'停产'}</span></td>
+            <td class="px-5 py-4"><div class="flex gap-x-1"><button onclick="editRow('${modKey}',${d.id})" class="px-3 py-1 text-xs text-blue-600 hover:bg-blue-50 rounded-lg">编辑</button><button onclick="deleteRow('${modKey}',${d.id})" class="px-3 py-1 text-xs text-red-500 hover:bg-red-50 rounded-lg">删除</button></div></td>
+        </tr>`).join('');
+    },
+    'product-category': function(data, modKey) {
+        return data.map(d=>`<tr class="data-table-row">
+            <td class="px-5 py-4 font-mono text-xs text-slate-400">${d.id}</td>
+            <td class="px-5 py-4 font-medium text-slate-800">${d.name}</td>
+            <td class="px-5 py-4 text-slate-600">${d.parent}</td>
+            <td class="px-5 py-4 font-mono text-slate-500">${d.sort}</td>
+            <td class="px-5 py-4 text-slate-600 text-xs">${d.desc}</td>
+            <td class="px-5 py-4"><div class="flex gap-x-1"><button onclick="editRow('${modKey}',${d.id})" class="px-3 py-1 text-xs text-blue-600 hover:bg-blue-50 rounded-lg">编辑</button><button onclick="deleteRow('${modKey}',${d.id})" class="px-3 py-1 text-xs text-red-500 hover:bg-red-50 rounded-lg">删除</button></div></td>
+        </tr>`).join('');
+    },
+    'product-promo': function(data, modKey) {
+        return data.map(d=>`<tr class="data-table-row">
+            <td class="px-5 py-4 font-mono text-xs text-slate-400">${d.id}</td>
+            <td class="px-5 py-4 font-medium text-slate-800">${d.name}</td>
+            <td class="px-5 py-4 text-slate-600">${d.type}</td>
+            <td class="px-5 py-4 font-semibold text-emerald-600">${d.discount}</td>
+            <td class="px-5 py-4 text-slate-600">${d.start}</td><td class="px-5 py-4 text-slate-600">${d.end}</td>
+            <td class="px-5 py-4"><span class="inline-block px-3 py-0.5 text-xs font-medium rounded-full ${d.status==='active'?'status-active':d.status==='ended'?'status-inactive':'status-pending'}">${d.status==='active'?'进行中':d.status==='ended'?'已结束':'待审批'}</span></td>
+            <td class="px-5 py-4"><div class="flex gap-x-1"><button onclick="editRow('${modKey}',${d.id})" class="px-3 py-1 text-xs text-blue-600 hover:bg-blue-50 rounded-lg">编辑</button><button onclick="deleteRow('${modKey}',${d.id})" class="px-3 py-1 text-xs text-red-500 hover:bg-red-50 rounded-lg">删除</button></div></td>
+        </tr>`).join('');
+    },
+    'supplier': function(data, modKey) {
+        return data.map(d=>`<tr class="data-table-row">
+            <td class="px-5 py-4 font-mono text-xs text-slate-400">${d.id}</td>
+            <td class="px-5 py-4 font-medium text-slate-800">${d.name}</td>
+            <td class="px-5 py-4 text-slate-600">${d.contact}</td>
+            <td class="px-5 py-4 font-mono text-xs text-slate-500">${d.phone}</td>
+            <td class="px-5 py-4 text-slate-600 text-xs">${d.address}</td>
+            <td class="px-5 py-4"><span class="inline-block px-2 py-0.5 text-xs font-medium rounded-full ${d.credit==='A级'?'status-active':'status-inactive'}">${d.credit}</span></td>
+            <td class="px-5 py-4"><div class="flex gap-x-1"><button onclick="editRow('${modKey}',${d.id})" class="px-3 py-1 text-xs text-blue-600 hover:bg-blue-50 rounded-lg">编辑</button><button onclick="deleteRow('${modKey}',${d.id})" class="px-3 py-1 text-xs text-red-500 hover:bg-red-50 rounded-lg">删除</button></div></td>
+        </tr>`).join('');
+    },
+    'supplier-contract': function(data, modKey) {
+        return data.map(d=>`<tr class="data-table-row">
+            <td class="px-5 py-4 font-mono text-xs text-slate-400">${d.id}</td>
+            <td class="px-5 py-4 font-mono text-xs text-blue-600">${d.contractNo}</td>
+            <td class="px-5 py-4 text-slate-600">${d.supplier}</td><td class="px-5 py-4 text-slate-600">${d.type}</td>
+            <td class="px-5 py-4 text-slate-600">${d.start}</td><td class="px-5 py-4 text-slate-600">${d.end}</td>
+            <td class="px-5 py-4 font-semibold text-right text-slate-700">¥${d.amount}</td>
+            <td class="px-5 py-4"><span class="inline-block px-3 py-0.5 text-xs font-medium rounded-full ${d.status==='active'?'status-active':d.status==='terminated'?'status-danger':'status-inactive'}">${d.status==='active'?'生效中':d.status==='terminated'?'已终止':'已过期'}</span></td>
+            <td class="px-5 py-4"><div class="flex gap-x-1"><button onclick="editRow('${modKey}',${d.id})" class="px-3 py-1 text-xs text-blue-600 hover:bg-blue-50 rounded-lg">编辑</button><button onclick="deleteRow('${modKey}',${d.id})" class="px-3 py-1 text-xs text-red-500 hover:bg-red-50 rounded-lg">删除</button></div></td>
+        </tr>`).join('');
+    },
+    'supplier-eval': function(data, modKey) {
+        return data.map(d=>`<tr class="data-table-row">
+            <td class="px-5 py-4 font-mono text-xs text-slate-400">${d.id}</td>
+            <td class="px-5 py-4 text-slate-600">${d.supplier}</td><td class="px-5 py-4 text-slate-600">${d.evaluator}</td>
+            <td class="px-5 py-4 font-bold text-blue-600">${d.score}</td>
+            <td class="px-5 py-4 text-slate-500">${d.quality}</td><td class="px-5 py-4 text-slate-500">${d.delivery}</td><td class="px-5 py-4 text-slate-500">${d.service}</td>
+            <td class="px-5 py-4 text-slate-600">${d.date}</td>
+            <td class="px-5 py-4"><div class="flex gap-x-1"><button onclick="editRow('${modKey}',${d.id})" class="px-3 py-1 text-xs text-blue-600 hover:bg-blue-50 rounded-lg">详情</button><button onclick="deleteRow('${modKey}',${d.id})" class="px-3 py-1 text-xs text-red-500 hover:bg-red-50 rounded-lg">删除</button></div></td>
+        </tr>`).join('');
+    },
+    'purchase': function(data, modKey) {
+        return data.map(d=>`<tr class="data-table-row">
+            <td class="px-5 py-4 font-mono text-xs text-slate-400">${d.id}</td>
+            <td class="px-5 py-4 font-mono text-xs text-amber-600">${d.orderNo}</td>
+            <td class="px-5 py-4 text-slate-600">${d.supplier}</td><td class="px-5 py-4 text-slate-600">${d.date}</td>
+            <td class="px-5 py-4 font-semibold text-right text-slate-700">¥${d.amount}</td>
+            <td class="px-5 py-4 text-slate-600">${d.delivery}</td>
+            <td class="px-5 py-4"><span class="inline-block px-3 py-0.5 text-xs font-medium rounded-full ${d.status==='completed'?'status-active':d.status==='approved'?'status-pending':d.status==='received'?'status-active':'status-inactive'}">${d.status==='draft'?'草稿':d.status==='approved'?'已审批':d.status==='received'?'已收货':d.status==='completed'?'已完成':'已取消'}</span></td>
+            <td class="px-5 py-4"><div class="flex gap-x-1"><button onclick="editRow('${modKey}',${d.id})" class="px-3 py-1 text-xs text-blue-600 hover:bg-blue-50 rounded-lg">详情</button><button onclick="deleteRow('${modKey}',${d.id})" class="px-3 py-1 text-xs text-red-500 hover:bg-red-50 rounded-lg">取消</button></div></td>
+        </tr>`).join('');
+    },
+    'purchase-inbound': function(data, modKey) {
+        return data.map(d=>`<tr class="data-table-row">
+            <td class="px-5 py-4 font-mono text-xs text-slate-400">${d.id}</td>
+            <td class="px-5 py-4 font-mono text-xs text-amber-600">${d.inboundNo}</td>
+            <td class="px-5 py-4 text-slate-600">${d.supplier}</td><td class="px-5 py-4 text-slate-600">${d.warehouse}</td>
+            <td class="px-5 py-4 font-mono text-right">${d.qty}</td><td class="px-5 py-4 text-slate-600">${d.date}</td>
+            <td class="px-5 py-4"><span class="inline-block px-3 py-0.5 text-xs font-medium rounded-full ${d.status==='completed'?'status-active':'status-pending'}">${d.status==='completed'?'已完成':d.status==='inspecting'?'验收中':'待审核'}</span></td>
+            <td class="px-5 py-4"><div class="flex gap-x-1"><button onclick="editRow('${modKey}',${d.id})" class="px-3 py-1 text-xs text-blue-600 hover:bg-blue-50 rounded-lg">详情</button><button onclick="deleteRow('${modKey}',${d.id})" class="px-3 py-1 text-xs text-red-500 hover:bg-red-50 rounded-lg">删除</button></div></td>
+        </tr>`).join('');
+    },
+    'warehouse': function(data, modKey) {
+        return data.map(d=>`<tr class="data-table-row">
+            <td class="px-5 py-4 font-mono text-xs text-slate-400">${d.id}</td>
+            <td class="px-5 py-4 font-medium text-slate-800">${d.name}</td>
+            <td class="px-5 py-4 text-slate-600 text-xs">${d.location}</td>
+            <td class="px-5 py-4 font-mono text-right">${d.capacity.toLocaleString()}</td>
+            <td class="px-5 py-4"><span class="inline-block px-3 py-0.5 text-xs font-medium rounded-full ${d.status==='active'?'status-active':d.status==='full'?'status-inactive':'status-danger'}">${d.status==='active'?'正常':d.status==='full'?'已满':'维护中'}</span></td>
+            <td class="px-5 py-4"><div class="flex gap-x-1"><button onclick="editRow('${modKey}',${d.id})" class="px-3 py-1 text-xs text-blue-600 hover:bg-blue-50 rounded-lg">编辑</button><button onclick="deleteRow('${modKey}',${d.id})" class="px-3 py-1 text-xs text-red-500 hover:bg-red-50 rounded-lg">删除</button></div></td>
+        </tr>`).join('');
+    },
+    'warehouse-inventory': function(data, modKey) {
+        return data.map(d=>`<tr class="data-table-row">
+            <td class="px-5 py-4 font-mono text-xs text-slate-400">${d.id}</td>
+            <td class="px-5 py-4 font-medium text-slate-800">${d.product}</td>
+            <td class="px-5 py-4 text-slate-600">${d.warehouse}</td>
+            <td class="px-5 py-4 font-mono text-xs text-slate-500">${d.batch}</td>
+            <td class="px-5 py-4 font-mono text-right ${d.qty<=10?'text-red-600 font-bold':'text-slate-600'}">${d.qty}</td>
+            <td class="px-5 py-4 font-mono text-xs text-slate-500">${d.bin}</td>
+            <td class="px-5 py-4 text-slate-600">${d.expiry}</td>
+            <td class="px-5 py-4"><span class="inline-block px-3 py-0.5 text-xs font-medium rounded-full ${d.status==='normal'?'status-active':d.status==='low_stock'?'status-inactive':d.status==='near_expiry'?'status-pending':'status-danger'}">${d.status==='normal'?'正常':d.status==='low_stock'?'低库存':d.status==='near_expiry'?'临期':'已过期'}</span></td>
+            <td class="px-5 py-4"><div class="flex gap-x-1"><button onclick="editRow('${modKey}',${d.id})" class="px-3 py-1 text-xs text-blue-600 hover:bg-blue-50 rounded-lg">调整</button></div></td>
+        </tr>`).join('');
+    },
+    'warehouse-inbound': function(data, modKey) {
+        return data.map(d=>`<tr class="data-table-row">
+            <td class="px-5 py-4 font-mono text-xs text-slate-400">${d.id}</td>
+            <td class="px-5 py-4 font-mono text-xs text-violet-600">${d.inboundNo}</td>
+            <td class="px-5 py-4 text-slate-600">${d.supplier}</td><td class="px-5 py-4 text-slate-600">${d.warehouse}</td>
+            <td class="px-5 py-4 font-mono text-right">${d.qty}</td><td class="px-5 py-4 text-slate-600">${d.date}</td>
+            <td class="px-5 py-4"><span class="inline-block px-3 py-0.5 text-xs font-medium rounded-full ${d.status==='completed'?'status-active':'status-inactive'}">${d.status==='completed'?'已完成':'待审核'}</span></td>
+            <td class="px-5 py-4"><div class="flex gap-x-1"><button onclick="editRow('${modKey}',${d.id})" class="px-3 py-1 text-xs text-blue-600 hover:bg-blue-50 rounded-lg">详情</button><button onclick="deleteRow('${modKey}',${d.id})" class="px-3 py-1 text-xs text-red-500 hover:bg-red-50 rounded-lg">删除</button></div></td>
+        </tr>`).join('');
+    },
+    'warehouse-outbound': function(data, modKey) {
+        return data.map(d=>`<tr class="data-table-row">
+            <td class="px-5 py-4 font-mono text-xs text-slate-400">${d.id}</td>
+            <td class="px-5 py-4 font-mono text-xs text-violet-600">${d.outboundNo}</td>
+            <td class="px-5 py-4 font-mono text-xs text-rose-600">${d.orderLink}</td>
+            <td class="px-5 py-4 text-slate-600">${d.warehouse}</td>
+            <td class="px-5 py-4 font-mono text-right">${d.qty}</td><td class="px-5 py-4 text-slate-600">${d.date}</td>
+            <td class="px-5 py-4"><span class="inline-block px-3 py-0.5 text-xs font-medium rounded-full ${d.status==='completed'?'status-active':d.status==='picking'?'status-pending':'status-inactive'}">${d.status==='completed'?'已完成':d.status==='picking'?'拣货中':'待处理'}</span></td>
+            <td class="px-5 py-4"><div class="flex gap-x-1"><button onclick="editRow('${modKey}',${d.id})" class="px-3 py-1 text-xs text-blue-600 hover:bg-blue-50 rounded-lg">详情</button></div></td>
+        </tr>`).join('');
+    },
+    'sales': function(data, modKey) {
+        return data.map(d=>`<tr class="data-table-row">
+            <td class="px-5 py-4 font-mono text-xs text-slate-400">${d.id}</td>
+            <td class="px-5 py-4 font-mono text-xs text-rose-600">${d.orderNo}</td>
+            <td class="px-5 py-4 text-slate-600">${d.member}</td><td class="px-5 py-4 text-slate-600">${d.cashier}</td>
+            <td class="px-5 py-4 font-semibold text-right text-emerald-600">¥${d.amount}</td>
+            <td class="px-5 py-4 text-slate-600">${d.method}</td><td class="px-5 py-4 text-slate-600 text-xs">${d.time}</td>
+            <td class="px-5 py-4"><span class="inline-block px-3 py-0.5 text-xs font-medium rounded-full ${d.status==='completed'?'status-active':d.status==='refunded'?'status-inactive':'status-danger'}">${d.status==='completed'?'已完成':d.status==='refunded'?'已退款':'已取消'}</span></td>
+            <td class="px-5 py-4"><div class="flex gap-x-1"><button onclick="editRow('${modKey}',${d.id})" class="px-3 py-1 text-xs text-blue-600 hover:bg-blue-50 rounded-lg">详情</button><button onclick="deleteRow('${modKey}',${d.id})" class="px-3 py-1 text-xs text-red-500 hover:bg-red-50 rounded-lg">退款</button></div></td>
+        </tr>`).join('');
+    },
+    'sales-return': function(data, modKey) {
+        return data.map(d=>`<tr class="data-table-row">
+            <td class="px-5 py-4 font-mono text-xs text-slate-400">${d.id}</td>
+            <td class="px-5 py-4 font-mono text-xs text-rose-600">${d.origOrder}</td>
+            <td class="px-5 py-4 text-slate-600">${d.member}</td><td class="px-5 py-4 text-slate-600">${d.handler}</td>
+            <td class="px-5 py-4 font-semibold text-right text-red-600">¥${d.amount}</td>
+            <td class="px-5 py-4 text-slate-600 text-xs">${d.reason}</td><td class="px-5 py-4 text-slate-600 text-xs">${d.time}</td>
+            <td class="px-5 py-4"><span class="inline-block px-3 py-0.5 text-xs font-medium rounded-full ${d.status==='completed'?'status-active':d.status==='pending'?'status-pending':'status-danger'}">${d.status==='completed'?'已完成':d.status==='pending'?'待审批':'已拒绝'}</span></td>
+            <td class="px-5 py-4"><div class="flex gap-x-1"><button onclick="editRow('${modKey}',${d.id})" class="px-3 py-1 text-xs text-blue-600 hover:bg-blue-50 rounded-lg">详情</button><button onclick="deleteRow('${modKey}',${d.id})" class="px-3 py-1 text-xs text-red-500 hover:bg-red-50 rounded-lg">删除</button></div></td>
+        </tr>`).join('');
+    },
+    'sales-stats': function(data, modKey) {
+        return data.map(d=>`<tr class="data-table-row">
+            <td class="px-5 py-4 font-mono text-xs text-slate-400">${d.id}</td>
+            <td class="px-5 py-4 font-medium text-slate-800">${d.period}</td>
+            <td class="px-5 py-4 font-semibold text-right text-emerald-600">${d.amount}</td>
+            <td class="px-5 py-4 font-mono text-right">${d.orders}</td><td class="px-5 py-4 font-mono text-right">${d.products}</td>
+            <td class="px-5 py-4"><div class="flex gap-x-1"><button onclick="editRow('${modKey}',${d.id})" class="px-3 py-1 text-xs text-blue-600 hover:bg-blue-50 rounded-lg">导出</button></div></td>
+        </tr>`).join('');
+    },
+    'member': function(data, modKey) {
+        return data.map(d=>`<tr class="data-table-row">
+            <td class="px-5 py-4 font-mono text-xs text-slate-400">${d.id}</td>
+            <td class="px-5 py-4 font-mono text-xs text-cyan-600">${d.cardNo}</td>
+            <td class="px-5 py-4 font-medium text-slate-800">${d.name}</td>
+            <td class="px-5 py-4 font-mono text-xs text-slate-500">${d.phone}</td>
+            <td class="px-5 py-4"><span class="inline-block px-2 py-0.5 text-xs font-medium rounded-full ${d.level==='金卡会员'?'bg-yellow-100 text-yellow-700':d.level==='银卡会员'?'bg-slate-200 text-slate-600':'bg-slate-100 text-slate-500'}">${d.level}</span></td>
+            <td class="px-5 py-4 font-mono text-right font-semibold text-cyan-600">${d.points.toLocaleString()}</td>
+            <td class="px-5 py-4 text-slate-600">${d.regDate}</td>
+            <td class="px-5 py-4"><span class="inline-block px-3 py-0.5 text-xs font-medium rounded-full ${d.status==='active'?'status-active':d.status==='inactive'?'status-inactive':'status-danger'}">${d.status==='active'?'正常':d.status==='inactive'?'停用':'黑名单'}</span></td>
+            <td class="px-5 py-4"><div class="flex gap-x-1"><button onclick="editRow('${modKey}',${d.id})" class="px-3 py-1 text-xs text-blue-600 hover:bg-blue-50 rounded-lg">编辑</button><button onclick="deleteRow('${modKey}',${d.id})" class="px-3 py-1 text-xs text-red-500 hover:bg-red-50 rounded-lg">删除</button></div></td>
+        </tr>`).join('');
+    },
+    'member-level': function(data, modKey) {
+        return data.map(d=>`<tr class="data-table-row">
+            <td class="px-5 py-4 font-mono text-xs text-slate-400">${d.id}</td>
+            <td class="px-5 py-4 font-medium text-slate-800">${d.name}</td>
+            <td class="px-5 py-4 text-slate-600 text-xs">${d.cond}</td>
+            <td class="px-5 py-4 font-semibold text-cyan-600">${d.discount}</td>
+            <td class="px-5 py-4 font-mono text-cyan-600">x${d.multi}</td>
+            <td class="px-5 py-4 text-slate-600 text-xs">${d.desc}</td>
+            <td class="px-5 py-4"><div class="flex gap-x-1"><button onclick="editRow('${modKey}',${d.id})" class="px-3 py-1 text-xs text-blue-600 hover:bg-blue-50 rounded-lg">编辑</button><button onclick="deleteRow('${modKey}',${d.id})" class="px-3 py-1 text-xs text-red-500 hover:bg-red-50 rounded-lg">删除</button></div></td>
+        </tr>`).join('');
+    },
+    'member-points': function(data, modKey) {
+        return data.map(d=>`<tr class="data-table-row">
+            <td class="px-5 py-4 font-mono text-xs text-slate-400">${d.id}</td>
+            <td class="px-5 py-4 font-medium text-slate-800">${d.member}</td>
+            <td class="px-5 py-4 font-semibold ${d.change.startsWith('+')?'text-emerald-600':'text-red-600'}">${d.change}</td>
+            <td class="px-5 py-4 text-slate-600">${d.type==='consume'?'消费获得':d.type==='redeem'?'积分兑换':d.type==='activity'?'活动赠送':d.type==='refund'?'退货返还':d.type}</td>
+            <td class="px-5 py-4 font-mono text-xs text-slate-500">${d.orderLink}</td>
+            <td class="px-5 py-4 text-slate-600">${d.date}</td>
+            <td class="px-5 py-4 text-slate-600 text-xs">${d.note}</td>
+            <td class="px-5 py-4"><button onclick="editRow('${modKey}',${d.id})" class="px-3 py-1 text-xs text-blue-600 hover:bg-blue-50 rounded-lg">详情</button></td>
+        </tr>`).join('');
+    },
+    'employee': function(data, modKey) {
+        return data.map(d=>`<tr class="data-table-row">
+            <td class="px-5 py-4 font-mono text-xs text-slate-400">${d.id}</td>
+            <td class="px-5 py-4 font-mono text-xs text-indigo-600">${d.no}</td>
+            <td class="px-5 py-4 font-medium text-slate-800">${d.name}</td>
+            <td class="px-5 py-4 text-slate-600">${d.dept}</td><td class="px-5 py-4 text-slate-600">${d.position}</td>
+            <td class="px-5 py-4 font-mono text-xs text-slate-500">${d.phone}</td>
+            <td class="px-5 py-4 text-slate-600">${d.hire}</td>
+            <td class="px-5 py-4"><span class="inline-block px-3 py-0.5 text-xs font-medium rounded-full ${d.status==='active'?'status-active':'status-danger'}">${d.status==='active'?'在职':'离职'}</span></td>
+            <td class="px-5 py-4"><div class="flex gap-x-1"><button onclick="editRow('${modKey}',${d.id})" class="px-3 py-1 text-xs text-blue-600 hover:bg-blue-50 rounded-lg">编辑</button><button onclick="deleteRow('${modKey}',${d.id})" class="px-3 py-1 text-xs text-red-500 hover:bg-red-50 rounded-lg">离职</button></div></td>
+        </tr>`).join('');
+    },
+    'employee-schedule': function(data, modKey) {
+        return data.map(d=>`<tr class="data-table-row">
+            <td class="px-5 py-4 font-mono text-xs text-slate-400">${d.id}</td>
+            <td class="px-5 py-4 font-medium text-slate-800">${d.emp}</td>
+            <td class="px-5 py-4 text-slate-600">${d.date}</td>
+            <td class="px-5 py-4"><span class="inline-block px-2 py-0.5 text-xs rounded-full ${d.shift==='morning'?'bg-yellow-100 text-yellow-700':d.shift==='afternoon'?'bg-orange-100 text-orange-700':d.shift==='night'?'bg-indigo-100 text-indigo-700':'bg-slate-100 text-slate-500'}">${d.shift==='morning'?'早班':d.shift==='afternoon'?'中班':d.shift==='night'?'晚班':'休息'}</span></td>
+            <td class="px-5 py-4 font-mono text-xs text-slate-500">${d.time}</td>
+            <td class="px-5 py-4"><span class="inline-block px-2 py-0.5 text-xs rounded-full ${d.attStatus==='normal'?'status-active':d.attStatus==='late'?'status-inactive':d.attStatus==='absent'?'status-danger':'status-pending'}">${d.attStatus==='normal'?'正常':d.attStatus==='late'?'迟到':d.attStatus==='absent'?'缺勤':'请假'}</span></td>
+            <td class="px-5 py-4 text-slate-600 text-xs">${d.note||'-'}</td>
+            <td class="px-5 py-4"><div class="flex gap-x-1"><button onclick="editRow('${modKey}',${d.id})" class="px-3 py-1 text-xs text-blue-600 hover:bg-blue-50 rounded-lg">编辑</button><button onclick="deleteRow('${modKey}',${d.id})" class="px-3 py-1 text-xs text-red-500 hover:bg-red-50 rounded-lg">删除</button></div></td>
+        </tr>`).join('');
+    },
+    'employee-payroll': function(data, modKey) {
+        return data.map(d=>`<tr class="data-table-row">
+            <td class="px-5 py-4 font-mono text-xs text-slate-400">${d.id}</td>
+            <td class="px-5 py-4 font-medium text-slate-800">${d.emp}</td>
+            <td class="px-5 py-4 font-mono text-xs text-indigo-600">${d.period}</td>
+            <td class="px-5 py-4 text-right font-mono text-slate-600">¥${d.base}</td>
+            <td class="px-5 py-4 text-right font-mono text-emerald-600">¥${d.bonus}</td>
+            <td class="px-5 py-4 text-right font-mono text-red-600">¥${d.ded}</td>
+            <td class="px-5 py-4 text-right font-bold text-indigo-600">¥${d.net}</td>
+            <td class="px-5 py-4"><span class="inline-block px-3 py-0.5 text-xs font-medium rounded-full ${d.status==='paid'?'status-active':'status-inactive'}">${d.status==='paid'?'已发放':'待发放'}</span></td>
+            <td class="px-5 py-4"><div class="flex gap-x-1"><button onclick="editRow('${modKey}',${d.id})" class="px-3 py-1 text-xs text-blue-600 hover:bg-blue-50 rounded-lg">详情</button></div></td>
+        </tr>`).join('');
+    },
+    'finance': function(data, modKey) {
+        return data.map(d=>`<tr class="data-table-row">
+            <td class="px-5 py-4 font-mono text-xs text-slate-400">${d.id}</td>
+            <td class="px-5 py-4 font-mono text-xs text-rose-600">${d.orderId}</td>
+            <td class="px-5 py-4 text-slate-600">${d.emp}</td>
+            <td class="px-5 py-4 font-semibold text-right text-emerald-600">¥${d.amount}</td>
+            <td class="px-5 py-4 text-slate-600">${d.method}</td><td class="px-5 py-4 text-slate-600 text-xs">${d.time}</td>
+            <td class="px-5 py-4"><span class="inline-block px-3 py-0.5 text-xs font-medium rounded-full ${d.status==='success'?'status-active':d.status==='refunded'?'status-inactive':'status-danger'}">${d.status==='success'?'成功':d.status==='refunded'?'已退款':'失败'}</span></td>
+            <td class="px-5 py-4"><button onclick="editRow('${modKey}',${d.id})" class="px-3 py-1 text-xs text-blue-600 hover:bg-blue-50 rounded-lg">详情</button></td>
+        </tr>`).join('');
+    },
+    'finance-journal': function(data, modKey) {
+        return data.map(d=>`<tr class="data-table-row">
+            <td class="px-5 py-4 font-mono text-xs text-slate-400">${d.id}</td>
+            <td class="px-5 py-4 font-mono text-xs text-teal-600">${d.voucherNo}</td>
+            <td class="px-5 py-4 text-slate-600">${d.date}</td>
+            <td class="px-5 py-4 text-slate-600 text-xs">${d.desc}</td>
+            <td class="px-5 py-4 text-right font-mono text-slate-600">¥${d.debit}</td>
+            <td class="px-5 py-4 text-right font-mono text-slate-600">¥${d.credit}</td>
+            <td class="px-5 py-4"><span class="inline-block px-3 py-0.5 text-xs font-medium rounded-full ${d.status==='posted'?'status-active':'status-pending'}">${d.status==='posted'?'已过账':'草稿'}</span></td>
+            <td class="px-5 py-4"><div class="flex gap-x-1"><button onclick="editRow('${modKey}',${d.id})" class="px-3 py-1 text-xs text-blue-600 hover:bg-blue-50 rounded-lg">详情</button></div></td>
+        </tr>`).join('');
+    },
+    'finance-budget': function(data, modKey) {
+        return data.map(d=>`<tr class="data-table-row">
+            <td class="px-5 py-4 font-mono text-xs text-slate-400">${d.id}</td>
+            <td class="px-5 py-4 font-mono text-xs text-teal-600">${d.period}</td>
+            <td class="px-5 py-4 text-slate-600">${d.account}</td>
+            <td class="px-5 py-4 text-right font-mono text-slate-600">¥${d.planned}</td>
+            <td class="px-5 py-4 text-right font-mono ${d.actual==='0'?'text-slate-400':d.variance.startsWith('-')?'text-emerald-600':'text-red-600'}">¥${d.actual}</td>
+            <td class="px-5 py-4 text-right font-mono ${d.variance==='-'?'text-slate-400':d.variance.startsWith('-')?'text-emerald-600':'text-red-600'}">${d.variance==='-'?'-':d.variance.startsWith('-')?'-¥'+d.variance.slice(1):'+¥'+d.variance.slice(1)}</td>
+            <td class="px-5 py-4"><span class="inline-block px-3 py-0.5 text-xs font-medium rounded-full ${d.status==='executing'?'status-active':d.status==='draft'?'status-pending':'status-active'}">${d.status==='executing'?'执行中':d.status==='draft'?'草稿':'已关闭'}</span></td>
+            <td class="px-5 py-4"><div class="flex gap-x-1"><button onclick="editRow('${modKey}',${d.id})" class="px-3 py-1 text-xs text-blue-600 hover:bg-blue-50 rounded-lg">编辑</button></div></td>
+        </tr>`).join('');
+    },
+    'system': function(data, modKey) {
+        return data.map(d=>`<tr class="data-table-row">
+            <td class="px-5 py-4 font-mono text-xs text-slate-400">${d.id}</td>
+            <td class="px-5 py-4 font-medium text-slate-800">${d.username}</td>
+            <td class="px-5 py-4 text-slate-600">${d.emp}</td><td class="px-5 py-4 text-slate-600">${d.role}</td>
+            <td class="px-5 py-4 text-slate-600 text-xs">${d.lastLogin}</td>
+            <td class="px-5 py-4"><span class="inline-block px-3 py-0.5 text-xs font-medium rounded-full ${d.status==='active'?'status-active':d.status==='inactive'?'status-inactive':'status-danger'}">${d.status==='active'?'正常':d.status==='inactive'?'停用':'锁定'}</span></td>
+            <td class="px-5 py-4"><div class="flex gap-x-1"><button onclick="editRow('${modKey}',${d.id})" class="px-3 py-1 text-xs text-blue-600 hover:bg-blue-50 rounded-lg">编辑</button><button onclick="deleteRow('${modKey}',${d.id})" class="px-3 py-1 text-xs text-red-500 hover:bg-red-50 rounded-lg">删除</button></div></td>
+        </tr>`).join('');
+    },
+    'system-perm': function(data, modKey) {
+        return data.map(d=>`<tr class="data-table-row">
+            <td class="px-5 py-4 font-mono text-xs text-slate-400">${d.id}</td>
+            <td class="px-5 py-4 font-mono text-xs text-slate-700">${d.code}</td>
+            <td class="px-5 py-4 font-medium text-slate-800">${d.name}</td>
+            <td class="px-5 py-4 text-slate-600">${d.module}</td>
+            <td class="px-5 py-4 text-slate-600 text-xs">${d.desc}</td>
+            <td class="px-5 py-4"><div class="flex gap-x-1"><button onclick="editRow('${modKey}',${d.id})" class="px-3 py-1 text-xs text-blue-600 hover:bg-blue-50 rounded-lg">编辑</button><button onclick="deleteRow('${modKey}',${d.id})" class="px-3 py-1 text-xs text-red-500 hover:bg-red-50 rounded-lg">删除</button></div></td>
+        </tr>`).join('');
+    },
+    'system-log': function(data, modKey) {
+        return data.map(d=>`<tr class="data-table-row">
+            <td class="px-5 py-4 font-mono text-xs text-slate-400">${d.id}</td>
+            <td class="px-5 py-4"><span class="inline-block px-2 py-0.5 text-xs rounded-full ${d.type==='exception'?'bg-red-100 text-red-700':d.type==='audit'?'bg-purple-100 text-purple-700':d.type==='operation'?'bg-blue-100 text-blue-700':'bg-emerald-100 text-emerald-700'}">${d.type==='operation'?'操作':d.type==='login'?'登录':d.type==='exception'?'异常':'审计'}</span></td>
+            <td class="px-5 py-4 text-slate-600">${d.module}</td><td class="px-5 py-4 text-slate-600">${d.action}</td>
+            <td class="px-5 py-4 font-mono text-xs text-slate-500">${d.user}</td>
+            <td class="px-5 py-4 font-mono text-xs text-slate-400">${d.ip}</td>
+            <td class="px-5 py-4 text-slate-600 text-xs">${d.time}</td>
+            <td class="px-5 py-4"><button onclick="editRow('${modKey}',${d.id})" class="px-3 py-1 text-xs text-blue-600 hover:bg-blue-50 rounded-lg">详情</button></td>
+        </tr>`).join('');
+    },
+    'system-config': function(data, modKey) {
+        return data.map(d=>`<tr class="data-table-row">
+            <td class="px-5 py-4 font-mono text-xs text-slate-400">${d.id}</td>
+            <td class="px-5 py-4 font-mono text-xs text-slate-700">${d.key}</td>
+            <td class="px-5 py-4 font-medium text-slate-800">${d.value}</td>
+            <td class="px-5 py-4 text-slate-600">${d.type==='system'?'系统':d.type==='ui'?'界面':'业务'}</td>
+            <td class="px-5 py-4 text-slate-600 text-xs">${d.desc}</td>
+            <td class="px-5 py-4 text-slate-600">${d.updateTime}</td>
+            <td class="px-5 py-4"><div class="flex gap-x-1"><button onclick="editRow('${modKey}',${d.id})" class="px-3 py-1 text-xs text-blue-600 hover:bg-blue-50 rounded-lg">编辑</button><button onclick="deleteRow('${modKey}',${d.id})" class="px-3 py-1 text-xs text-red-500 hover:bg-red-50 rounded-lg">删除</button></div></td>
+        </tr>`).join('');
+    }
+};
+
+// 通用渲染器（回退）
+function defaultRenderer(data, modKey) {
+    const def = MODULE_DEFS[modKey];
+    if (!def) return '';
+    const cols = def.columns.length - 1; // exclude 操作 column
+    return data.map(d => {
+        const vals = Object.values(d);
+        let cells = '';
+        for (let i = 0; i < cols && i < vals.length; i++) {
+            cells += `<td class="px-5 py-4 text-slate-600">${vals[i]}</td>`;
+        }
+        return `<tr class="data-table-row">${cells}<td class="px-5 py-4"><div class="flex gap-x-1"><button onclick="editRow('${modKey}',${d.id})" class="px-3 py-1 text-xs text-blue-600 hover:bg-blue-50 rounded-lg">编辑</button><button onclick="deleteRow('${modKey}',${d.id})" class="px-3 py-1 text-xs text-red-500 hover:bg-red-50 rounded-lg">删除</button></div></td></tr>`;
+    }).join('');
+}
+
+// ==================== 事件绑定 ====================
+function bindTableEvents(modKey) {
+    const def = MODULE_DEFS[modKey];
+    if (!def) return;
+    const data = SAMPLE_DATA[def.dataKey] || [];
+    const tbody = document.getElementById('tbody-'+modKey);
+    const countEl = document.getElementById('count-'+modKey);
+    if (!tbody) return;
+    const renderFn = RENDERERS[modKey] || defaultRenderer;
+    tbody.innerHTML = renderFn(data, modKey);
+    if (countEl) countEl.textContent = `共 ${data.length} 条记录`;
+}
+
+function filterTable(modKey) {
+    const searchEl = document.getElementById('search-'+modKey);
+    const filterEl = document.getElementById('filter-'+modKey);
+    const searchVal = searchEl ? searchEl.value.toLowerCase() : '';
+    const filterVal = filterEl ? filterEl.value : '';
+    const def = MODULE_DEFS[modKey];
+    if (!def) return;
+    let data = SAMPLE_DATA[def.dataKey] || [];
+    if (filterVal) {
+        data = data.filter(d => {
+            const status = d.status || d.attStatus || '';
+            return status === filterVal;
+        });
+    }
+    if (searchVal) {
+        data = data.filter(d => JSON.stringify(Object.values(d)).toLowerCase().includes(searchVal));
+    }
+    const tbody = document.getElementById('tbody-'+modKey);
+    const countEl = document.getElementById('count-'+modKey);
+    if (tbody) {
+        const renderFn = RENDERERS[modKey] || defaultRenderer;
+        tbody.innerHTML = renderFn(data, modKey);
+    }
+    if (countEl) countEl.textContent = `共 ${data.length} 条记录`;
+}
+
+// ==================== 模态框操作 ====================
+function showAddModal(modKey) {
+    const def = MODULE_DEFS[modKey];
+    if (!def) return;
+    const modalId = 'modal-'+modKey;
+    // Remove existing modal if any
+    const existing = document.getElementById(modalId);
+    if (existing) existing.remove();
+    const container = document.getElementById('global-modal-container');
+    container.innerHTML = `<div id="${modalId}" class="fixed inset-0 bg-black/50 flex items-center justify-center z-[150]" onclick="closeModal('${modalId}')">
+        <div onclick="event.stopImmediatePropagation()" class="bg-white w-full max-w-xl mx-4 rounded-3xl shadow-2xl">
+            <div class="px-7 py-5 border-b flex justify-between items-center"><div class="font-bold text-xl">${def.addLabel} - ${def.title}</div><button onclick="closeModal('${modalId}')" class="text-2xl leading-none text-slate-400 hover:text-slate-600">&times;</button></div>
+            <div class="p-7 space-y-5 text-sm" id="${modalId}-body">
+                <p class="text-center text-slate-400 py-8">表单加载中...</p>
+            </div>
+            <div class="px-7 py-5 border-t flex justify-end gap-x-3 bg-slate-50 rounded-b-3xl">
+                <button onclick="closeModal('${modalId}')" class="px-6 py-2 text-sm font-medium rounded-2xl border">取消</button>
+                <button onclick="saveRecord('${modKey}')" class="px-8 py-2 text-sm font-semibold bg-${def.color}-600 text-white rounded-2xl hover:bg-${def.color}-700">保存</button>
+            </div>
+        </div>
+    </div>`;
+    setTimeout(() => fillModalForm(modKey, modalId), 50);
+}
+
+function fillModalForm(modKey, modalId) {
+    const body = document.getElementById(modalId+'-body');
+    if (!body) return;
+    const def = MODULE_DEFS[modKey];
+    const cols = def.columns.filter(c => c !== '操作');
+    let fieldsHTML = '<div class="grid grid-cols-2 gap-4">';
+    cols.forEach((col, i) => {
+        if (i > 0 && i % 2 === 0) fieldsHTML += '</div><div class="grid grid-cols-2 gap-4">';
+        const inputType = col.includes('日期')||col.includes('时间') ? 'date' :
+                          col.includes('金额')||col.includes('价格') ? 'number' :
+                          col.includes('数量')||col.includes('库存')||col.includes('积分') ? 'number' : 'text';
+        fieldsHTML += `<div><label class="block text-xs font-semibold mb-1.5 text-slate-600">${col}</label><input id="fld-${modKey}-${i}" type="${inputType}" class="w-full border border-slate-200 rounded-2xl px-4 py-2.5 text-sm" placeholder="请输入${col}"></div>`;
+    });
+    fieldsHTML += '</div>';
+    body.innerHTML = fieldsHTML;
+}
+
+function closeModal(modalId) {
+    const m = document.getElementById(modalId);
+    if (m) m.remove();
+}
+
+function saveRecord(modKey) {
+    const def = MODULE_DEFS[modKey];
+    showToast(`「${def.title}」记录已保存（模拟）`, 'success');
+    closeModal('modal-'+modKey);
+    bindTableEvents(modKey);
+}
+
+function editRow(modKey, id) {
+    const def = MODULE_DEFS[modKey];
+    showToast(`正在编辑「${def.title}」记录 #${id}`, 'info');
+    showAddModal(modKey);
+}
+
+function deleteRow(modKey, id) {
+    const def = MODULE_DEFS[modKey];
+    if (confirm(`确定要删除该记录吗？此操作不可恢复。`)) {
+        showToast(`「${def.title}」记录 #${id} 已删除（模拟）`, 'success');
+        bindTableEvents(modKey);
+    }
+}
+
+// ==================== 通知 ====================
+let notifications = [
+    { id:1, time:'2026-05-25 09:15', content:'本周促销活动：全场饮品满100减25，有效期至6月1日', type:'promo' },
+    { id:2, time:'2026-05-25 14:20', content:'系统将于今晚22:00进行例行维护，预计30分钟', type:'system' },
+    { id:3, time:'2026-05-24 18:40', content:'新会员积分翻倍活动已上线，详情见会员模块', type:'member' }
+];
+function initNotifications() {}
+function showNotifications() {
+    const dd = document.getElementById('notification-dropdown');
+    const list = document.getElementById('notification-list');
+    list.innerHTML = notifications.map(n=>`<div class="px-5 py-3.5 border-b last:border-b-0 hover:bg-slate-50 flex gap-x-3 text-sm"><div class="mt-1 flex-shrink-0"><i class="fa-solid ${n.type==='promo'?'fa-tags text-emerald-500':n.type==='system'?'fa-tools text-amber-500':'fa-user-plus text-blue-500'}"></i></div><div class="flex-1 min-w-0"><div class="leading-snug">${n.content}</div><div class="text-xs text-slate-400 mt-1">${n.time}</div></div></div>`).join('');
+    dd.classList.toggle('hidden');
+    setTimeout(()=>document.addEventListener('click',function h(e){if(!dd.contains(e.target)){dd.classList.add('hidden');document.removeEventListener('click',h);}},{once:true}),10);
+}
+function viewAllNotifications() {
+    document.getElementById('notification-dropdown').classList.add('hidden');
+    showToast('已跳转至完整通知中心（演示）','info');
+}
+
+// ==================== 快捷操作 ====================
+function quickAction(action) {
+    const msgs = { 'inventory-check':'库存盘点功能已打开', 'daily-report':'日报已生成并下载', 'new-sale':'快速销售收银界面已打开', 'new-purchase':'新建采购订单表单已打开' };
+    showToast(msgs[action]||'功能已触发','success');
+    if (action==='new-sale') setTimeout(()=>loadModule('sales'),600);
+    if (action==='new-purchase') setTimeout(()=>loadModule('purchase'),600);
+}
+
+// ==================== 初始化 ====================
+function initializeSystem() {
+    document.getElementById('login-view').classList.remove('hidden');
+    document.getElementById('main-view').classList.add('hidden');
+    document.addEventListener('keypress',function(e){if(e.key==='Enter'&&!document.getElementById('login-view').classList.contains('hidden'))handleLogin();});
+    console.log('%c[超市管理系统UI] 完整原型已加载 - 8大模块 30+子模块','color:#64748b');
+}
+window.onload = initializeSystem;
+</script>
+
+</body>
+</html>

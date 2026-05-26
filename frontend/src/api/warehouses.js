@@ -1,0 +1,11 @@
+import { get, post, put, del } from './index.js';
+export const getWarehouses = () => get('/warehouses');
+export const createWarehouse = (data) => post('/warehouses', data);
+export const updateWarehouse = (id, data) => put(`/warehouses/${id}`, data);
+export const getInventory = (params) => get('/inventory', params);
+export const adjustInventory = (data) => post('/inventory/adjust', data);
+export const getInventoryDetails = (params) => get('/inventory-details', params);
+export const getOutboundRecords = (params) => get('/outbound-records', params);
+export const createOutboundRecord = (data) => post('/outbound-records', data);
+export const updateOutboundRecord = (id, data) => put(`/outbound-records/${id}`, data);
+export const deleteOutboundRecord = (id) => del(`/outbound-records/${id}`);

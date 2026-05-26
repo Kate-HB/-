@@ -1,0 +1,10 @@
+import { get, post, put, del } from './index.js';
+export const getPurchaseOrders = (params) => get('/purchase-orders', params);
+export const createPurchaseOrder = (data) => post('/purchase-orders', data);
+export const updatePurchaseOrder = (id, data) => put(`/purchase-orders/${id}`, data);
+export const approvePurchaseOrder = (id) => put(`/purchase-orders/${id}/approve`);
+export const deletePurchaseOrder = (id) => del(`/purchase-orders/${id}`);
+export const getInboundRecords = (params) => get('/inbound-records', params);
+export const createInboundRecord = (data) => post('/inbound-records', data);
+export const updateInboundRecord = (id, data) => put(`/inbound-records/${id}`, data);
+export const deleteInboundRecord = (id) => del(`/inbound-records/${id}`);

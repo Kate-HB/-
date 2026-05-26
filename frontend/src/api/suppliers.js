@@ -1,0 +1,13 @@
+import { get, post, put, del } from './index.js';
+export const getSuppliers = (params) => get('/suppliers', params);
+export const createSupplier = (data) => post('/suppliers', data);
+export const updateSupplier = (id, data) => put(`/suppliers/${id}`, data);
+export const deleteSupplier = (id) => del(`/suppliers/${id}`);
+export const getContracts = (params) => get('/supplier-contracts', params);
+export const createContract = (data) => post('/supplier-contracts', data);
+export const updateContract = (id, data) => put(`/supplier-contracts/${id}`, data);
+export const deleteContract = (id) => del(`/supplier-contracts/${id}`);
+export const getEvaluations = (params) => get('/supplier-evaluations', params);
+export const createEvaluation = (data) => post('/supplier-evaluations', data);
+export const updateEvaluation = (id, data) => put(`/supplier-evaluations/${id}`, data);
+export const deleteEvaluation = (id) => del(`/supplier-evaluations/${id}`);

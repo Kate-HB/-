@@ -1,0 +1,11 @@
+import { get, post, put, del } from './index.js';
+export const getMembers = (params) => get('/members', params);
+export const createMember = (data) => post('/members', data);
+export const updateMember = (id, data) => put(`/members/${id}`, data);
+export const deleteMember = (id) => del(`/members/${id}`);
+export const getMemberLevels = () => get('/member-levels');
+export const createMemberLevel = (data) => post('/member-levels', data);
+export const updateMemberLevel = (id, data) => put(`/member-levels/${id}`, data);
+export const deleteMemberLevel = (id) => del(`/member-levels/${id}`);
+export const getMemberPoints = (params) => get('/member-points', params);
+export const addMemberPoints = (data) => post('/member-points', data);
