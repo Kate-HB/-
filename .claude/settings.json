@@ -101,7 +101,18 @@
       "Bash(taskkill /F /PID 35428)",
       "Bash(taskkill /F /PID 33444)",
       "Bash(taskkill //F //PID 35428)",
-      "Bash(taskkill //F //PID 33444)"
+      "Bash(taskkill //F //PID 33444)",
+      "Bash(python -m pip install pandas openpyxl -q)",
+      "Bash(python -c \"import openpyxl; print\\('ok'\\)\")",
+      "Bash(python -c \"import openpyxl; print\\('openpyxl ready'\\)\")",
+      "Bash(where python *)",
+      "Bash(python -m pip --version)",
+      "Bash(.venv/Scripts/python -m pip install openpyxl)",
+      "Bash(.venv/Scripts/python -m pip install pandas -q)",
+      "Bash(.venv/Scripts/python -c ' *)",
+      "Bash(.venv/Scripts/python generate_testcases.py)",
+      "Bash(.venv/Scripts/python -c \"import json; d=json.load\\(open\\('test_data.json','r',encoding='utf-8'\\)\\); print\\('OK, modules:', len\\(d['modules']\\), 'entities:', len\\(d['entities']\\)\\)\")",
+      "Bash(.venv/Scripts/python build_xlsx.py)"
     ]
   }
 }
