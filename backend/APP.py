@@ -57,6 +57,7 @@ def create_app():
 
         db.create_all()
         seed_permissions()
+        seed_admin_user()
 
     @app.get('/api/health')
     def health_check():
@@ -78,6 +79,34 @@ def seed_permissions():
     for code, name, module, desc in perms:
         if not Permission.query.filter_by(permission_code=code).first():
             db.session.add(Permission(permission_code=code, permission_name=name, module=module, description=desc))
+    db.session.commit()
+
+
+def seed_admin_user():
+    from models.user import User
+    from models.system import Role, UserRole, Permission, RolePermission
+    from werkzeug.security import generate_password_hash
+
+    admin = User.query.filter_by(username='admin').first()
+    if not admin:
+        admin = User(username='admin', password_hash=generate_password_hash('admin123'), status='active')
+        db.session.add(admin)
+        db.session.flush()
+
+    role = Role.query.filter_by(role_name='系统管理员').first()
+    if not role:
+        role = Role(role_name='系统管理员', description='全部权限')
+        db.session.add(role)
+        db.session.flush()
+
+    if not UserRole.query.filter_by(user_id=admin.user_id, role_id=role.role_id).first():
+        db.session.add(UserRole(user_id=admin.user_id, role_id=role.role_id))
+
+    perms = Permission.query.all()
+    for p in perms:
+        if not RolePermission.query.filter_by(role_id=role.role_id, permission_id=p.permission_id).first():
+            db.session.add(RolePermission(role_id=role.role_id, permission_id=p.permission_id))
+
     db.session.commit()
 
 
