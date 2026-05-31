@@ -140,25 +140,36 @@ def seed_test_data():
         admin = User(username='admin', password_hash=generate_password_hash('admin123'), status='active')
         db.session.add(admin)
         db.session.flush()
-    zhangsan = User(username='zhangsan', password_hash=generate_password_hash('123456'), status='active')
-    lisi = User(username='lisi', password_hash=generate_password_hash('123456'), status='active')
-    db.session.add_all([zhangsan, lisi])
-    db.session.flush()
+    zhangsan = User.query.filter_by(username='zhangsan').first()
+    if not zhangsan:
+        zhangsan = User(username='zhangsan', password_hash=generate_password_hash('123456'), status='active')
+        db.session.add(zhangsan)
+        db.session.flush()
+    lisi = User.query.filter_by(username='lisi').first()
+    if not lisi:
+        lisi = User(username='lisi', password_hash=generate_password_hash('123456'), status='active')
+        db.session.add(lisi)
+        db.session.flush()
 
     role_admin = Role.query.filter_by(role_name='系统管理员').first()
     if not role_admin:
         role_admin = Role(role_name='系统管理员', description='全部权限')
         db.session.add(role_admin)
         db.session.flush()
-    role_mgr = Role(role_name='经理', description='管理权限')
-    role_staff = Role(role_name='员工', description='基础权限')
-    db.session.add_all([role_mgr, role_staff])
-    db.session.flush()
+    role_mgr = Role.query.filter_by(role_name='经理').first()
+    if not role_mgr:
+        role_mgr = Role(role_name='经理', description='管理权限')
+        db.session.add(role_mgr)
+        db.session.flush()
+    role_staff = Role.query.filter_by(role_name='员工').first()
+    if not role_staff:
+        role_staff = Role(role_name='员工', description='基础权限')
+        db.session.add(role_staff)
+        db.session.flush()
 
-    UserRole.query.filter_by(user_id=admin.user_id).delete()
-    db.session.add(UserRole(user_id=admin.user_id, role_id=role_admin.role_id))
-    db.session.add(UserRole(user_id=zhangsan.user_id, role_id=role_mgr.role_id))
-    db.session.add(UserRole(user_id=lisi.user_id, role_id=role_staff.role_id))
+    for uid, rid in [(admin.user_id, role_admin.role_id), (zhangsan.user_id, role_mgr.role_id), (lisi.user_id, role_staff.role_id)]:
+        if not UserRole.query.filter_by(user_id=uid, role_id=rid).first():
+            db.session.add(UserRole(user_id=uid, role_id=rid))
 
     # Assign all permissions to admin
     all_perms = Permission.query.all()
