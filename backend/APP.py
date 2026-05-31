@@ -1,9 +1,10 @@
-from flask import Flask
+import os
+from flask import Flask, send_from_directory
 from flask_cors import CORS
 from importlib import import_module
 from config import Config
 from models import db
-from utils.errors import success_response
+from utils.errors import success_response, error_response
 
 
 def create_app():
@@ -14,6 +15,27 @@ def create_app():
 
     from routes import register_blueprints
     register_blueprints(app)
+
+    # 生产环境：提供前端静态文件
+    static_dir = os.path.join(os.path.dirname(__file__), 'static')
+    if os.path.isdir(static_dir):
+        @app.route('/')
+        def serve_index():
+            return send_from_directory(static_dir, 'index.html')
+
+        @app.route('/favicon.ico')
+        def serve_favicon():
+            p = os.path.join(static_dir, 'favicon.ico')
+            return send_from_directory(static_dir, 'favicon.ico') if os.path.exists(p) else ('', 204)
+
+        @app.route('/<path:path>')
+        def serve_frontend(path):
+            if path.startswith('api'):
+                return error_response('Not found', 404)
+            file_path = os.path.join(static_dir, path)
+            if os.path.exists(file_path) and os.path.isfile(file_path):
+                return send_from_directory(static_dir, path)
+            return send_from_directory(static_dir, 'index.html')
 
     @app.errorhandler(400)
     @app.errorhandler(401)
@@ -62,4 +84,5 @@ def seed_permissions():
 app = create_app()
 
 if __name__ == '__main__':
-    app.run(debug=app.config['DEBUG'], host='0.0.0.0', port=5000)
+    port = int(os.environ.get('PORT', 5000))
+    app.run(debug=app.config['DEBUG'], host='0.0.0.0', port=port)
