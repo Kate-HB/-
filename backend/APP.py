@@ -129,7 +129,8 @@ def seed_test_data():
     from models.system import Role, UserRole, Permission, RolePermission
     from werkzeug.security import generate_password_hash
 
-    if Position.query.first():
+    from models.product import Product as PD
+    if PD.query.first():
         return
 
     print('[seed] Creating test data...')
@@ -199,8 +200,10 @@ def seed_test_data():
     ]
     positions = []
     for name, resp, grade in pos_data:
-        pos = Position(position_name=name, responsibilities=resp, salary_grade=grade)
-        db.session.add(pos)
+        pos = Position.query.filter_by(position_name=name).first()
+        if not pos:
+            pos = Position(position_name=name, responsibilities=resp, salary_grade=grade)
+            db.session.add(pos)
         positions.append(pos)
     db.session.flush()
 
@@ -214,10 +217,12 @@ def seed_test_data():
     ]
     employees = []
     for name, no, dept, pi, hire in emp_data:
-        e = Employee(employee_name=name, employee_no=no, department=dept,
-                     position_id=positions[pi].position_id, phone=f'1390000{1000+len(employees)}',
-                     status='active', hire_date=datetime.strptime(hire, '%Y-%m-%d').date())
-        db.session.add(e)
+        e = Employee.query.filter_by(employee_no=no).first()
+        if not e:
+            e = Employee(employee_name=name, employee_no=no, department=dept,
+                         position_id=positions[pi].position_id, phone=f'1390000{1000+len(employees)}',
+                         status='active', hire_date=datetime.strptime(hire, '%Y-%m-%d').date())
+            db.session.add(e)
         employees.append(e)
     db.session.flush()
 
@@ -230,8 +235,10 @@ def seed_test_data():
     cat_names = ['生鲜果蔬', '粮油调味', '休闲食品', '酒水饮料', '日用百货', '乳制品', '冷冻食品', '个人护理', '家居清洁', '母婴用品']
     categories = []
     for i, name in enumerate(cat_names):
-        c = Category(category_name=name, sort_order=i+1)
-        db.session.add(c)
+        c = Category.query.filter_by(category_name=name).first()
+        if not c:
+            c = Category(category_name=name, sort_order=i+1)
+            db.session.add(c)
         categories.append(c)
     db.session.flush()
 
@@ -246,8 +253,10 @@ def seed_test_data():
     ]
     suppliers = []
     for name, contact, phone, addr, credit in sup_data:
-        s = Supplier(supplier_name=name, contact_person=contact, phone=phone, address=addr, credit_level=credit)
-        db.session.add(s)
+        s = Supplier.query.filter_by(supplier_name=name).first()
+        if not s:
+            s = Supplier(supplier_name=name, contact_person=contact, phone=phone, address=addr, credit_level=credit)
+            db.session.add(s)
         suppliers.append(s)
     db.session.flush()
 
@@ -267,8 +276,10 @@ def seed_test_data():
                ('冷藏库', '地下冷库', 800), ('精品库', '主仓二层', 1200)]
     warehouses = []
     for name, loc, cap in wh_data:
-        w = Warehouse(warehouse_name=name, location=loc, capacity=cap, status='active')
-        db.session.add(w)
+        w = Warehouse.query.filter_by(warehouse_name=name).first()
+        if not w:
+            w = Warehouse(warehouse_name=name, location=loc, capacity=cap, status='active')
+            db.session.add(w)
         warehouses.append(w)
     db.session.flush()
 
@@ -285,10 +296,12 @@ def seed_test_data():
     ]
     products = []
     for idx, (name, cat_i, sup_i, price, spec, unit) in enumerate(prod_data):
-        p = Product(product_name=name, category_id=categories[cat_i].category_id,
-                    supplier_id=suppliers[sup_i].supplier_id,
-                    base_price=price, spec=spec, unit=unit, status='active')
-        db.session.add(p)
+        p = Product.query.filter_by(product_name=name).first()
+        if not p:
+            p = Product(product_name=name, category_id=categories[cat_i].category_id,
+                        supplier_id=suppliers[sup_i].supplier_id,
+                        base_price=price, spec=spec, unit=unit, status='active')
+            db.session.add(p)
         products.append(p)
     db.session.flush()
 
@@ -318,10 +331,12 @@ def seed_test_data():
                 ('黄先生','13800001238','铜卡',120)]
     members = []
     for name, phone, level, pts in mem_data:
-        m = Member(member_no=f'M{datetime.now().strftime("%y%m%d")}{random.randint(0,999999):06d}',
-                   member_name=name, phone=phone, level=level, points=pts,
-                   register_date=date.today()-timedelta(days=random.randint(30,365)), status='active')
-        db.session.add(m)
+        m = Member.query.filter_by(member_name=name).first()
+        if not m:
+            m = Member(member_no=f'M{datetime.now().strftime("%y%m%d")}{random.randint(0,999999):06d}',
+                       member_name=name, phone=phone, level=level, points=pts,
+                       register_date=date.today()-timedelta(days=random.randint(30,365)), status='active')
+            db.session.add(m)
         members.append(m)
     db.session.flush()
 
