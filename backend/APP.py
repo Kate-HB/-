@@ -255,7 +255,7 @@ def seed_test_data():
     for i, name in enumerate(cat_names):
         c = Category.query.filter_by(category_name=name).first()
         if not c:
-            c = Category(category_name=name, sort_order=i+1)
+            c = Category(category_name=name)
             db.session.add(c)
         categories.append(c)
     db.session.flush()
