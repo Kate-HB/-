@@ -316,8 +316,8 @@ def seed_test_data():
     for idx, (name, cat_i, sup_i, price, spec, unit) in enumerate(prod_data):
         p = Product.query.filter_by(product_name=name).first()
         if not p:
-            p = Product(product_name=name, category_id=categories[cat_i].category_id,
-                        supplier_id=suppliers[sup_i].supplier_id,
+            p = Product(product_name=name, category_id=categories[cat_i % len(categories)].category_id,
+                        supplier_id=suppliers[sup_i % len(suppliers)].supplier_id,
                         base_price=price, spec=spec, unit=unit, status='active')
             db.session.add(p)
         products.append(p)
