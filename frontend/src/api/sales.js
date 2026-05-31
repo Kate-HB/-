@@ -7,4 +7,6 @@ export const createSalesReturn = (data) => post('/sales-returns', data);
 export const approveSalesReturn = (id) => put(`/sales-returns/${id}/approve`);
 export const getSalesStatistics = (params) => get('/sales-statistics', params);
 export const getProductRankings = (params) => get('/product-rankings', params);
+export const getSalesOrderItems = (id) => get(`/sales-orders/${id}/items`);
+export const calculateDiscounts = (data) => post('/calculate-discounts', data);
 export const cashRegister = (data) => post('/cash-register', data);

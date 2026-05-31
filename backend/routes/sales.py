@@ -59,7 +59,7 @@ def get_sales_orders():
         'status': r.status,
         'items': [{
             'product_id': item.product_id,
-            'product_name': item.product.product_name,
+            'product_name': item.product.product_name if item.product else '',
             'quantity': item.quantity,
             'unit_price': float(item.unit_price),
             'subtotal': float(item.subtotal)
@@ -93,13 +93,157 @@ def get_sales_order(id):
         'status': r.status,
         'items': [{
             'product_id': item.product_id,
-            'product_name': item.product.product_name,
+            'product_name': item.product.product_name if item.product else '',
             'quantity': item.quantity,
             'unit_price': float(item.unit_price),
             'subtotal': float(item.subtotal)
         } for item in r.items]
     }
     return jsonify(success_response(result))
+
+
+@bp.route('/api/sales-orders/<int:id>/items', methods=['GET'])
+@require_auth
+def get_sales_order_items(id):
+    order = SalesOrder.query.options(
+        joinedload(SalesOrder.items).joinedload(SalesOrderItem.product)
+    ).get_or_404(id)
+    items = [{
+        'product_id': item.product_id,
+        'product_name': item.product.product_name if item.product else '',
+        'quantity': item.quantity,
+        'unit_price': float(item.unit_price),
+        'subtotal': float(item.subtotal)
+    } for item in order.items]
+    return jsonify(success_response({
+        'order_id': order.order_id,
+        'order_number': order.order_number,
+        'total_amount': float(order.total_amount),
+        'items': items
+    }))
+
+
+@bp.route('/api/calculate-discounts', methods=['POST'])
+@require_auth
+def calculate_discounts():
+    """Preview promotions for a cart without creating an order."""
+    data, err = get_json()
+    if err: return err
+    items = data.get('items', [])
+    if not items:
+        return error_response('明细不能为空')
+
+    now = datetime.utcnow()
+    product_ids = [int(item['product_id']) for item in items]
+
+    product_promo_rows = db.session.query(Promotion, PromotionProduct).join(
+        PromotionProduct, Promotion.promotion_id == PromotionProduct.promotion_id
+    ).filter(
+        PromotionProduct.product_id.in_(product_ids),
+        Promotion.status == 'active',
+        Promotion.start_date <= now,
+        Promotion.end_date >= now
+    ).all()
+
+    linked_promo_ids = {p.promotion_id for p, _ in product_promo_rows}
+    store_q = Promotion.query.filter(
+        Promotion.status == 'active',
+        Promotion.start_date <= now,
+        Promotion.end_date >= now
+    )
+    if linked_promo_ids:
+        store_q = store_q.filter(~Promotion.promotion_id.in_(linked_promo_ids))
+    store_promos = store_q.all()
+
+    promo_map = {}
+    for promo, pp in product_promo_rows:
+        promo_map.setdefault(pp.product_id, []).append((promo, pp))
+    for promo in store_promos:
+        for pid in product_ids:
+            promo_map.setdefault(pid, []).append((promo, None))
+
+    applied_names = set()
+    item_discounts = {}
+    total_discount = 0
+
+    for item in items:
+        pid = int(item['product_id'])
+        original_price = float(item.get('unit_price', 0))
+        final_price = original_price
+        for promo, pp in promo_map.get(pid, []):
+            if promo.promotion_type == 'discount':
+                specific = float(pp.specific_discount) if pp and pp.specific_discount else None
+                rate = float(specific or promo.discount_rate or 1)
+                if 0 < rate < 1:
+                    final_price = min(final_price, round(original_price * rate, 2))
+                    applied_names.add(promo.promotion_name)
+        if final_price < original_price:
+            discount_per_unit = round(original_price - final_price, 2)
+            item_discounts[pid] = discount_per_unit
+            total_discount += int(item['quantity']) * discount_per_unit
+
+    total_before = sum(int(item['quantity']) * float(item.get('unit_price', 0)) for item in items)
+    total = 0
+    for item in items:
+        qty = int(item['quantity'])
+        original_price = float(item.get('unit_price', 0))
+        discount = item_discounts.get(int(item['product_id']), 0)
+        total += qty * (original_price - discount)
+
+    full_reduction = 0
+    for item in items:
+        for promo, pp in promo_map.get(int(item['product_id']), []):
+            if promo.promotion_type == 'full_reduction' and promo.fixed_amount:
+                threshold = float(promo.min_amount or 0)
+                if total >= threshold:
+                    amount = float(promo.fixed_amount)
+                    if amount > full_reduction:
+                        full_reduction = amount
+                        applied_names.add(promo.promotion_name)
+    if full_reduction > total:
+        full_reduction = 0
+    total = round(total - full_reduction, 2)
+    total_discount = round(total_discount + full_reduction, 2)
+
+    gift_items = []
+    seen_gift_promos = set()
+    cart_qty_map = {int(item['product_id']): int(item['quantity']) for item in items}
+    for item in items:
+        pid = int(item['product_id'])
+        for promo, pp in promo_map.get(pid, []):
+            if promo.promotion_type == 'buy_gift' and promo.gift_product_id and promo.promotion_id not in seen_gift_promos:
+                promo_linked_pids = {p for p, promos in promo_map.items()
+                                     if any(p2.promotion_id == promo.promotion_id for p2, _ in promos)}
+                linked_qty = sum(cart_qty_map.get(p, 0) for p in promo_linked_pids) if promo_linked_pids else cart_qty_map.get(pid, 0)
+                if linked_qty >= (promo.min_quantity or 1):
+                    seen_gift_promos.add(promo.promotion_id)
+                    gift = Product.query.get(promo.gift_product_id)
+                    if gift:
+                        gift_items.append({
+                            'product_id': gift.product_id,
+                            'product_name': gift.product_name,
+                            'quantity': promo.gift_quantity or 1,
+                            'unit_price': 0
+                        })
+                        applied_names.add(promo.promotion_name)
+
+    points_earned = 0
+    if data.get('member_id'):
+        points_multiplier = 1.0
+        all_promos = [p for p, _ in product_promo_rows] + list(store_promos)
+        for promo in all_promos:
+            if promo.promotion_type == 'points' and promo.points_earned:
+                points_multiplier = max(points_multiplier, float(promo.points_earned))
+        points_earned = int(total * points_multiplier)
+
+    return jsonify(success_response({
+        'total_before_discount': round(total_before, 2),
+        'total_after_discount': total,
+        'discount_amount': total_discount,
+        'promotions': list(applied_names),
+        'gift_items': gift_items,
+        'points_earned': points_earned
+    }))
 
 
 @bp.route('/api/sales-orders', methods=['POST'])
@@ -215,7 +359,7 @@ def cancel_sales_order(id):
             db.session.add(inv)
     order.status = 'cancelled'
     db.session.commit()
-    log_operation('sales', 'cancel', 'SalesOrder', id, data.get('order_number') or order.order_number)
+    log_operation('sales', 'cancel', 'SalesOrder', id, order.order_number)
     return jsonify(success_response(message='订单已取消，库存已恢复'))
 
 
@@ -347,8 +491,8 @@ def cash_register():
         points_multiplier = 1.0
         all_promos = [p for p, _ in product_promo_rows] + list(store_promos)
         for promo in all_promos:
-            if promo.promotion_type == 'points' and promo.discount_rate:
-                points_multiplier = max(points_multiplier, float(promo.discount_rate))
+            if promo.promotion_type == 'points' and promo.points_earned:
+                points_multiplier = max(points_multiplier, float(promo.points_earned))
         points_earned = int(total * points_multiplier)
 
     amount_received = float(data['amount_received'])
@@ -472,7 +616,7 @@ def get_sales_returns():
         'status': r.status,
         'items': [{
             'product_id': item.product_id,
-            'product_name': item.product.product_name,
+            'product_name': item.product.product_name if item.product else '',
             'quantity': item.quantity,
             'refund_amount': float(item.refund_amount)
         } for item in r.items]

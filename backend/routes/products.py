@@ -95,33 +95,6 @@ def add_product():
         status=data.get('status', 'active')
     )
     db.session.add(product)
-    db.session.flush()
-
-    stock_quantity = max(int(data.get('stock_quantity', 0)), 0)
-    safety_stock = max(int(data.get('safety_stock') or 10), 0)
-    warehouse_id = data.get('warehouse_id')
-    if warehouse_id:
-        inv = Inventory(
-            product_id=product.product_id,
-            warehouse_id=warehouse_id,
-            stock_quantity=stock_quantity,
-            safety_stock=safety_stock
-        )
-        sync_inventory_status(inv)
-        db.session.add(inv)
-    else:
-        warehouses = Warehouse.query.all()
-        if warehouses:
-            for index, wh in enumerate(warehouses):
-                inv = Inventory(
-                    product_id=product.product_id,
-                    warehouse_id=wh.warehouse_id,
-                    stock_quantity=stock_quantity if index == 0 else 0,
-                    safety_stock=safety_stock
-                )
-                sync_inventory_status(inv)
-                db.session.add(inv)
-
     db.session.commit()
     log_operation('product', 'create', 'Product', product.product_id, data.get('product_name', ''))
     return jsonify(success_response({'product_id': product.product_id}, '商品添加成功'))
@@ -138,26 +111,6 @@ def update_product(id):
                   'base_price', 'cost_price', 'barcode', 'spec', 'unit', 'status']:
         if field in data:
             setattr(product, field, data[field])
-    if 'stock_quantity' in data:
-        stock_quantity = max(int(data['stock_quantity'] or 0), 0)
-        inventories = Inventory.query.filter_by(product_id=id).order_by(Inventory.inventory_id.asc()).all()
-        if inventories:
-            first = inventories[0]
-            first.stock_quantity = stock_quantity
-            sync_inventory_status(first)
-            for inv in inventories[1:]:
-                if inv.stock_quantity < 0:
-                    inv.stock_quantity = 0
-                sync_inventory_status(inv)
-        elif data.get('warehouse_id'):
-            inv = Inventory(
-                product_id=id,
-                warehouse_id=data['warehouse_id'],
-                stock_quantity=stock_quantity,
-                safety_stock=max(int(data.get('safety_stock') or 10), 0)
-            )
-            sync_inventory_status(inv)
-            db.session.add(inv)
     db.session.commit()
     log_operation('product', 'update', 'Product', id, data.get('product_name') or product.product_name)
     return jsonify(success_response(message='商品更新成功'))
@@ -187,13 +140,12 @@ def delete_product(id):
 @bp.route('/api/categories', methods=['GET'])
 @require_auth
 def get_categories():
-    rows = Category.query.order_by(Category.sort_order).all()
+    rows = Category.query.order_by(Category.category_id).all()
     result = [{
         'category_id': r.category_id,
         'category_name': r.category_name,
         'parent_category_id': r.parent_category_id,
-        'description': r.description,
-        'sort_order': r.sort_order
+        'description': r.description
     } for r in rows]
     return jsonify(success_response(result))
 
@@ -209,8 +161,7 @@ def add_category():
     cat = Category(
         category_name=data['category_name'],
         parent_category_id=data.get('parent_category_id'),
-        description=data.get('description', ''),
-        sort_order=data.get('sort_order', 0)
+        description=data.get('description', '')
     )
     db.session.add(cat)
     db.session.commit()
@@ -225,7 +176,7 @@ def update_category(id):
     cat = Category.query.get_or_404(id)
     data, err = get_json()
     if err: return err
-    for field in ['category_name', 'parent_category_id', 'description', 'sort_order']:
+    for field in ['category_name', 'parent_category_id', 'description']:
         if field in data:
             if field == 'parent_category_id' and data[field] == id:
                 return error_response('不能将自己设为父分类')
@@ -284,6 +235,7 @@ def get_promotions():
             'promotion_name': r.promotion_name,
             'promotion_type': r.promotion_type,
             'discount_rate': float(r.discount_rate) if r.discount_rate else None,
+            'points_earned': r.points_earned or 0,
             'fixed_amount': float(r.fixed_amount) if r.fixed_amount else None,
             'min_amount': float(r.min_amount) if r.min_amount else None,
             'min_quantity': r.min_quantity,
@@ -329,6 +281,7 @@ def add_promotion():
         fixed_amount=data.get('fixed_amount'),
         min_amount=data.get('min_amount'),
         min_quantity=data.get('min_quantity'),
+        points_earned=data.get('points_earned', 0),
         gift_quantity=data.get('gift_quantity', 1),
         gift_product_id=data.get('gift_product_id'),
         start_date=datetime.fromisoformat(data['start_date']),
@@ -358,7 +311,7 @@ def update_promotion(id):
     promo = Promotion.query.get_or_404(id)
     data, err = get_json()
     if err: return err
-    for field in ['promotion_name', 'promotion_type', 'discount_rate', 'fixed_amount', 'min_amount', 'min_quantity', 'gift_quantity', 'gift_product_id', 'status']:
+    for field in ['promotion_name', 'promotion_type', 'discount_rate', 'points_earned', 'fixed_amount', 'min_amount', 'min_quantity', 'gift_quantity', 'gift_product_id', 'status']:
         if field in data:
             setattr(promo, field, data[field])
     if 'discount_rate' in data and data['discount_rate'] is not None:

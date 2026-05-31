@@ -91,9 +91,9 @@ def get_inventory():
     result = [{
         'inventory_id': r.inventory_id,
         'product_id': r.product_id,
-        'product_name': r.product.product_name,
+        'product_name': r.product.product_name if r.product else '',
         'warehouse_id': r.warehouse_id,
-        'warehouse_name': r.warehouse.warehouse_name,
+        'warehouse_name': r.warehouse.warehouse_name if r.warehouse else '',
         'stock_quantity': r.stock_quantity,
         'safety_stock': r.safety_stock,
         'last_restock_date': r.last_restock_date.isoformat() if r.last_restock_date else None,
@@ -115,6 +115,8 @@ def adjust_inventory():
     if int(data['stock_quantity']) < 0:
         return error_response('库存数量不能为负数')
     inv.stock_quantity = data['stock_quantity']
+    if 'safety_stock' in data:
+        inv.safety_stock = max(int(data.get('safety_stock') or 10), 0)
     if inv.stock_quantity <= 0:
         inv.status = 'out_of_stock'
     elif inv.stock_quantity <= inv.safety_stock:
@@ -145,9 +147,9 @@ def get_inventory_details():
     result = [{
         'inventory_detail_id': r.inventory_detail_id,
         'warehouse_id': r.warehouse_id,
-        'warehouse_name': r.warehouse.warehouse_name,
+        'warehouse_name': r.warehouse.warehouse_name if r.warehouse else '',
         'product_id': r.product_id,
-        'product_name': r.product.product_name,
+        'product_name': r.product.product_name if r.product else '',
         'batch_no': r.batch_no,
         'quantity': r.quantity,
         'bin_location': r.bin_location,
@@ -179,14 +181,14 @@ def get_outbound_records():
         'outbound_no': r.outbound_no,
         'source_order_id': r.source_order_id,
         'warehouse_id': r.warehouse_id,
-        'warehouse_name': r.warehouse.warehouse_name,
+        'warehouse_name': r.warehouse.warehouse_name if r.warehouse else '',
         'total_quantity': r.total_quantity,
         'outbound_date': r.outbound_date.isoformat() if r.outbound_date else None,
         'status': r.status,
         'notes': r.notes,
         'items': [{
             'product_id': item.product_id,
-            'product_name': item.product.product_name,
+            'product_name': item.product.product_name if item.product else '',
             'batch_no': item.batch_no,
             'quantity': item.quantity,
             'bin_location': item.bin_location
@@ -229,12 +231,11 @@ def add_outbound_record():
         )
         db.session.add(oi)
 
+        # Only check stock, do not deduct - deduction happens on approval
         inv = Inventory.query.filter_by(product_id=item['product_id'], warehouse_id=data['warehouse_id']).first()
-        if inv:
-            if inv.stock_quantity < item['quantity']:
-                db.session.rollback()
-                return error_response(f'商品 {item["product_id"]} 库存不足')
-            inv.stock_quantity -= item['quantity']
+        if inv and inv.stock_quantity < item['quantity']:
+            db.session.rollback()
+            return error_response(f'商品 {item["product_id"]} 库存不足')
 
     record.total_quantity = total_qty
     db.session.commit()
@@ -272,3 +273,29 @@ def delete_outbound_record(id):
     except Exception:
         db.session.rollback()
         return error_response('删除失败，出库记录可能存在关联数据')
+
+
+@bp.route('/api/outbound-records/<int:id>/approve', methods=['PUT'])
+@require_auth
+@require_permission('warehouse:crud')
+def approve_outbound_record(id):
+    record = OutboundRecord.query.get_or_404(id)
+    if record.status != 'pending':
+        return error_response('只能审批待处理状态的出库记录')
+    record.status = 'completed'
+    record.approved_by = get_current_employee_id()
+
+    for item in record.items:
+        inv = Inventory.query.filter_by(product_id=item.product_id, warehouse_id=record.warehouse_id).first()
+        if not inv or inv.stock_quantity < item.quantity:
+            db.session.rollback()
+            return error_response(f'商品 {item.product_id} 库存不足')
+        inv.stock_quantity -= item.quantity
+        if inv.stock_quantity <= 0:
+            inv.status = 'out_of_stock'
+        elif inv.stock_quantity <= inv.safety_stock:
+            inv.status = 'low'
+
+    db.session.commit()
+    log_operation('warehouse', 'approve', 'OutboundRecord', id)
+    return jsonify(success_response(message='出库审批成功，库存已扣减'))

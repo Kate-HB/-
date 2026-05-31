@@ -91,6 +91,10 @@
             <label class="text-sm font-medium text-slate-600">实收金额</label>
             <input v-model.number="amountReceived" type="number" step="0.01" min="0" class="form-input mt-1 text-lg font-bold" />
           </div>
+          <button @click="previewDiscounts" :disabled="!cart.length" type="button"
+            class="w-full py-2 rounded-xl border border-amber-200 bg-amber-50 text-amber-700 text-sm font-medium hover:bg-amber-100 transition-colors disabled:opacity-50 mt-1">
+            <i class="fa-solid fa-tag mr-1"></i>预览促销
+          </button>
           <div v-if="change > 0" class="flex justify-between text-sm mt-2 p-2 bg-emerald-50 rounded-lg">
             <span class="text-emerald-700">找零</span>
             <span class="font-bold text-emerald-700">¥ {{ change.toFixed(2) }}</span>
@@ -125,7 +129,7 @@
 <script setup>
 import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue';
 import { useAuthStore } from '@/stores/auth.js';
-import { cashRegister } from '@/api/sales';
+import { cashRegister, calculateDiscounts } from '@/api/sales';
 import { getProducts } from '@/api/products';
 import { getEmployees } from '@/api/employees';
 import { getMembers } from '@/api/members';
@@ -214,6 +218,19 @@ async function checkout() {
   } finally {
     checkingOut.value = false;
   }
+}
+
+async function previewDiscounts() {
+  if (!cart.value.length) return;
+  try {
+    const res = await calculateDiscounts({
+      member_id: memberId.value || null,
+      items: cart.value.map(i => ({ product_id: i.product_id, quantity: i.quantity, unit_price: i.unit_price }))
+    });
+    appliedPromos.value = res.data.promotions || [];
+    discountAmount.value = res.data.discount_amount || 0;
+    pointsEarned.value = res.data.points_earned || 0;
+  } catch (e) { error.value = e.message; }
 }
 
 function onKeydown(e) {

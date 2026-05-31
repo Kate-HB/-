@@ -53,7 +53,8 @@ const formFields = [
   { key: 'contact_person', label: '联系人', type: 'text' },
   { key: 'phone', label: '联系电话', type: 'text' },
   { key: 'address', label: '地址', type: 'text' },
-  { key: 'credit_level', label: '信用等级', type: 'text' }
+  { key: 'credit_level', label: '信用等级', type: 'select',
+    options: [{ value: 'A', label: 'A级' }, { value: 'B', label: 'B级' }, { value: 'C', label: 'C级' }, { value: 'D', label: 'D级' }] }
 ];
 
 function openAdd() { editingItem.value = null; modalVisible.value = true; }

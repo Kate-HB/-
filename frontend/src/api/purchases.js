@@ -8,3 +8,4 @@ export const getInboundRecords = (params) => get('/inbound-records', params);
 export const createInboundRecord = (data) => post('/inbound-records', data);
 export const updateInboundRecord = (id, data) => put(`/inbound-records/${id}`, data);
 export const deleteInboundRecord = (id) => del(`/inbound-records/${id}`);
+export const receiveInboundRecord = (id) => put(`/inbound-records/${id}/receive`);

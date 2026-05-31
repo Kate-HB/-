@@ -7,7 +7,6 @@ class Category(db.Model):
     category_name = db.Column(db.String(80), nullable=False)
     parent_category_id = db.Column(db.Integer, db.ForeignKey('categories.category_id'), nullable=True)
     description = db.Column(db.Text)
-    sort_order = db.Column(db.Integer, default=0)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     parent = db.relationship('Category', remote_side=[category_id], backref='children')
@@ -47,6 +46,7 @@ class Promotion(db.Model):
     start_date = db.Column(db.DateTime, nullable=False)
     end_date = db.Column(db.DateTime, nullable=False)
     approved_by = db.Column(db.Integer, nullable=True)
+    points_earned = db.Column(db.Integer, default=0)
     gift_product_id = db.Column(db.Integer, db.ForeignKey('products.product_id'), nullable=True)
     status = db.Column(db.String(20), default='pending')
     gift_product = db.relationship('Product', foreign_keys=[gift_product_id])

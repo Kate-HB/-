@@ -41,7 +41,7 @@ import FormModal from '@/components/FormModal.vue';
 import ConfirmDialog from '@/components/ConfirmDialog.vue';
 import StatusBadge from '@/components/StatusBadge.vue';
 import { getBudgets, createBudget, updateBudget, deleteBudget, approveBudget, getAccounts } from '@/api/finance';
-import { getTaxDeclarations, createTaxDeclaration, updateTaxDeclaration, deleteTaxDeclaration } from '@/api/finance';
+import { getTaxDeclarations, createTaxDeclaration, updateTaxDeclaration, deleteTaxDeclaration, approveTaxDeclaration, payTaxDeclaration } from '@/api/finance';
 import { formatCurrency } from '@/utils/format';
 import { useToast } from '@/utils/toast';
 const toast = useToast();
@@ -89,7 +89,9 @@ const taxCols = [
 
 const taxActions = [
   { label: '编辑', icon: 'fa-edit', color: 'emerald', visible: (row) => row.payment_status !== 'paid', handler: (row) => { editingTax.value = { ...row }; taxVisible.value = true; } },
-  { label: '删除', icon: 'fa-trash', color: 'red', handler: (row) => { delTaxItem.value = row; delTaxVisible.value = true; } }
+  { label: '审批', icon: 'fa-check', color: 'blue', visible: (row) => row.payment_status === 'unpaid', handler: async (row) => { try { await approveTaxDeclaration(row.tax_declaration_id); taxRef.value?.fetchData(); } catch (e) { toast.error(e.message); } } },
+  { label: '缴税', icon: 'fa-money-bill', color: 'emerald', visible: (row) => row.payment_status === 'unpaid', handler: async (row) => { try { await payTaxDeclaration(row.tax_declaration_id); taxRef.value?.fetchData(); } catch (e) { toast.error(e.message); } } },
+  { label: '删除', icon: 'fa-trash', color: 'red', visible: (row) => row.payment_status !== 'paid', handler: (row) => { delTaxItem.value = row; delTaxVisible.value = true; } }
 ];
 
 const taxFields = [

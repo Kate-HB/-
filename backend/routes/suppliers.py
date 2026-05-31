@@ -46,12 +46,15 @@ def add_supplier():
     if err: return err
     missing = require_fields(data, 'supplier_name')
     if missing: return error_response(f'缺少必要字段: {missing}')
+    cl = data.get('credit_level', '')
+    if cl and cl not in ('A', 'B', 'C', 'D'):
+        return error_response('信用等级必须为 A、B、C 或 D')
     supplier = Supplier(
         supplier_name=data['supplier_name'],
         contact_person=data.get('contact_person', ''),
         phone=data.get('phone', ''),
         address=data.get('address', ''),
-        credit_level=data.get('credit_level', '')
+        credit_level=cl
     )
     db.session.add(supplier)
     db.session.commit()
@@ -68,6 +71,8 @@ def update_supplier(id):
     if err: return err
     for field in ['supplier_name', 'contact_person', 'phone', 'address', 'credit_level']:
         if field in data:
+            if field == 'credit_level' and data[field] and data[field] not in ('A', 'B', 'C', 'D'):
+                return error_response('信用等级必须为 A、B、C 或 D')
             setattr(supplier, field, data[field])
     db.session.commit()
     log_operation('supplier', 'update', 'Supplier', id, data.get('supplier_name') or supplier.supplier_name)
@@ -107,7 +112,7 @@ def get_contracts():
     result = [{
         'contract_id': r.contract_id,
         'supplier_id': r.supplier_id,
-        'supplier_name': r.supplier.supplier_name,
+        'supplier_name': r.supplier.supplier_name if r.supplier else '',
         'contract_number': r.contract_number,
         'contract_type': r.contract_type,
         'start_date': r.start_date.isoformat() if r.start_date else None,
@@ -200,7 +205,7 @@ def get_evaluations():
     result = [{
         'evaluation_id': r.evaluation_id,
         'supplier_id': r.supplier_id,
-        'supplier_name': r.supplier.supplier_name,
+        'supplier_name': r.supplier.supplier_name if r.supplier else '',
         'evaluator_id': r.evaluator_id,
         'evaluator_name': r.evaluator.employee_name if r.evaluator else '',
         'score': float(r.score),
@@ -242,3 +247,37 @@ def add_evaluation():
     db.session.commit()
     log_operation('supplier', 'create', 'SupplierEvaluation', ev.evaluation_id)
     return jsonify(success_response({'evaluation_id': ev.evaluation_id}, '评价添加成功'))
+
+
+@bp.route('/api/supplier-evaluations/<int:id>', methods=['PUT'])
+@require_auth
+@require_permission('supplier:crud')
+def update_evaluation(id):
+    ev = SupplierEvaluation.query.get_or_404(id)
+    data, err = get_json()
+    if err: return err
+    for field in ['supplier_id', 'evaluator_id', 'score', 'quality_score', 'delivery_score', 'service_score', 'comments']:
+        if field in data:
+            setattr(ev, field, data[field])
+    if 'evaluation_date' in data and data['evaluation_date']:
+        try:
+            ev.evaluation_date = datetime.strptime(data['evaluation_date'], '%Y-%m-%d').date()
+        except (ValueError, TypeError):
+            pass
+    db.session.commit()
+    log_operation('supplier', 'update', 'SupplierEvaluation', id)
+    return jsonify(success_response(message='评价更新成功'))
+
+
+@bp.route('/api/supplier-evaluations/<int:id>', methods=['DELETE'])
+@require_auth
+@require_permission('supplier:crud')
+def delete_evaluation(id):
+    try:
+        SupplierEvaluation.query.filter_by(evaluation_id=id).delete()
+        db.session.commit()
+        log_operation('supplier', 'delete', 'SupplierEvaluation', id)
+        return jsonify(success_response(message='评价删除成功'))
+    except Exception:
+        db.session.rollback()
+        return error_response('删除失败')

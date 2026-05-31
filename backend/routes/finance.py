@@ -146,7 +146,7 @@ def get_journal_entries():
         'items': [{
             'item_id': item.item_id,
             'account_id': item.account_id,
-            'account_name': item.account.account_name,
+            'account_name': item.account.account_name if item.account else '',
             'debit_amount': float(item.debit_amount),
             'credit_amount': float(item.credit_amount),
             'description': item.description
@@ -249,7 +249,7 @@ def post_journal_entry(id):
         account.balance = float(account.balance or 0) + delta
 
     db.session.commit()
-    log_operation('finance', 'post', 'JournalEntry', id, data.get('voucher_no') or entry.voucher_no)
+    log_operation('finance', 'post', 'JournalEntry', id, entry.voucher_no)
     return jsonify(success_response(message='过账成功'))
 
 
@@ -331,7 +331,7 @@ def get_budgets():
         'budget_id': r.budget_id,
         'budget_period': r.budget_period,
         'account_id': r.account_id,
-        'account_name': r.account.account_name,
+        'account_name': r.account.account_name if r.account else '',
         'planned_amount': float(r.planned_amount),
         'actual_amount': float(r.actual_amount),
         'variance': float(r.variance) if r.variance else None,
@@ -390,7 +390,7 @@ def approve_budget(id):
     b.status = 'approved'
     b.approved_by = get_current_employee_id()
     db.session.commit()
-    log_operation('finance', 'approve', 'Budget', id, data.get('budget_period') or b.budget_period)
+    log_operation('finance', 'approve', 'Budget', id, b.budget_period)
     return jsonify(success_response(message='预算审批成功'))
 
 
@@ -472,6 +472,34 @@ def update_tax_declaration(id):
     db.session.commit()
     log_operation('finance', 'update', 'TaxDeclaration', id)
     return jsonify(success_response(message='税务申报更新成功'))
+
+
+@bp.route('/api/tax-declarations/<int:id>/approve', methods=['PUT'])
+@require_auth
+@require_permission('finance:crud')
+def approve_tax_declaration(id):
+    td = TaxDeclaration.query.get_or_404(id)
+    if td.payment_status == 'paid':
+        return error_response('已缴税不可重复审批')
+    td.approved_by = get_current_employee_id()
+    db.session.commit()
+    log_operation('finance', 'approve', 'TaxDeclaration', id)
+    return jsonify(success_response(message='税务申报审批成功'))
+
+
+@bp.route('/api/tax-declarations/<int:id>/pay', methods=['PUT'])
+@require_auth
+@require_permission('finance:crud')
+def pay_tax_declaration(id):
+    td = TaxDeclaration.query.get_or_404(id)
+    if td.payment_status == 'paid':
+        return error_response('已缴税，无需重复缴纳')
+    td.payment_status = 'paid'
+    td.paid_amount = td.tax_amount
+    td.submission_date = date.today()
+    db.session.commit()
+    log_operation('finance', 'pay', 'TaxDeclaration', id)
+    return jsonify(success_response(message='缴税成功'))
 
 
 @bp.route('/api/tax-declarations/<int:id>', methods=['DELETE'])

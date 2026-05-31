@@ -16,5 +16,7 @@ export const approveBudget = (id) => put(`/budgets/${id}/approve`);
 export const getTaxDeclarations = (params) => get('/tax-declarations', params);
 export const createTaxDeclaration = (data) => post('/tax-declarations', data);
 export const updateTaxDeclaration = (id, data) => put(`/tax-declarations/${id}`, data);
+export const approveTaxDeclaration = (id) => put(`/tax-declarations/${id}/approve`);
+export const payTaxDeclaration = (id) => put(`/tax-declarations/${id}/pay`);
 export const deleteTaxDeclaration = (id) => del(`/tax-declarations/${id}`);
 export const createCashRecord = (data) => post('/cash-records', data);

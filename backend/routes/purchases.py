@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify
 from models import db
 from models.purchase import PurchaseOrder, PurchaseOrderItem
+from models.product import Product
 from models.warehouse import Inventory, InboundRecord, InboundItem
 from utils.errors import success_response, error_response, get_json, require_fields
 from utils.auth import require_auth, require_permission, get_current_employee_id
@@ -39,7 +40,7 @@ def get_purchase_orders():
         'order_id': r.order_id,
         'order_number': r.order_number,
         'supplier_id': r.supplier_id,
-        'supplier_name': r.supplier.supplier_name,
+        'supplier_name': r.supplier.supplier_name if r.supplier else '',
         'contract_id': r.contract_id,
         'order_date': r.order_date.isoformat() if r.order_date else None,
         'total_amount': float(r.total_amount),
@@ -51,7 +52,7 @@ def get_purchase_orders():
         'payment_status': r.payment_status,
         'items': [{
             'product_id': item.product_id,
-            'product_name': item.product.product_name,
+            'product_name': item.product.product_name if item.product else '',
             'quantity': item.quantity,
             'unit_price': float(item.unit_price),
             'subtotal': float(item.subtotal)
@@ -74,7 +75,7 @@ def add_purchase_order():
         order_number=data.get('order_number', 'PO' + datetime.now().strftime('%Y%m%d%H%M%S') + uuid.uuid4().hex[:4].upper()),
         order_date=datetime.strptime(data['order_date'], '%Y-%m-%d').date() if data.get('order_date') else datetime.now(timezone.utc).date(),
         total_amount=data.get('total_amount', 0),
-        status=data.get('status', 'draft'),
+        status=data.get('status') or 'draft',
         delivery_date=datetime.strptime(data['delivery_date'], '%Y-%m-%d').date() if data.get('delivery_date') else None,
         warehouse_id=data.get('warehouse_id'),
         created_by=get_current_employee_id(),
@@ -87,11 +88,13 @@ def add_purchase_order():
 
     total = 0
     for item in data.get('items', []):
+        pid = item.get('product_id')
+        if not pid: continue
         subtotal = item['quantity'] * float(item['unit_price'])
         total += subtotal
         oi = PurchaseOrderItem(
             order_id=order.order_id,
-            product_id=item['product_id'],
+            product_id=pid,
             quantity=item['quantity'],
             unit_price=item['unit_price'],
             subtotal=subtotal
@@ -122,11 +125,13 @@ def update_purchase_order(id):
         PurchaseOrderItem.query.filter_by(order_id=id).delete()
         total = 0
         for item in data['items']:
+            pid = item.get('product_id')
+            if not pid: continue
             subtotal = item['quantity'] * float(item['unit_price'])
             total += subtotal
             oi = PurchaseOrderItem(
                 order_id=id,
-                product_id=item['product_id'],
+                product_id=pid,
                 quantity=item['quantity'],
                 unit_price=item['unit_price'],
                 subtotal=subtotal
@@ -148,7 +153,7 @@ def approve_purchase_order(id):
     order.status = 'approved'
     order.approved_by = get_current_employee_id()
     db.session.commit()
-    log_operation('purchase', 'approve', 'PurchaseOrder', id, data.get('order_number') or order.order_number)
+    log_operation('purchase', 'approve', 'PurchaseOrder', id, order.order_number)
     return jsonify(success_response(message='审批成功'))
 
 
@@ -191,16 +196,17 @@ def get_inbound_records():
         'inbound_record_id': r.inbound_record_id,
         'inbound_no': r.inbound_no,
         'supplier_id': r.supplier_id,
-        'supplier_name': r.supplier.supplier_name,
+        'supplier_name': r.supplier.supplier_name if r.supplier else '',
+        'purchase_order_id': r.purchase_order_id,
         'warehouse_id': r.warehouse_id,
-        'warehouse_name': r.warehouse.warehouse_name,
+        'warehouse_name': r.warehouse.warehouse_name if r.warehouse else '',
         'total_quantity': r.total_quantity,
         'inbound_date': r.inbound_date.isoformat() if r.inbound_date else None,
         'status': r.status,
         'notes': r.notes,
         'items': [{
             'product_id': item.product_id,
-            'product_name': item.product.product_name,
+            'product_name': item.product.product_name if item.product else '',
             'batch_no': item.batch_no,
             'quantity': item.quantity,
             'unit_price': float(item.unit_price) if item.unit_price else None,
@@ -219,13 +225,18 @@ def add_inbound_record():
     if err: return err
     missing = require_fields(data, 'supplier_id', 'warehouse_id')
     if missing: return error_response(f'缺少必填字段: {missing}')
+    purchase_order_id = data.get('purchase_order_id')
+    if purchase_order_id is not None:
+        try: purchase_order_id = int(purchase_order_id)
+        except: purchase_order_id = None
     record = InboundRecord(
         inbound_no=data.get('inbound_no', 'IN' + datetime.now().strftime('%Y%m%d%H%M%S') + uuid.uuid4().hex[:4].upper()),
         supplier_id=data['supplier_id'],
         warehouse_id=data['warehouse_id'],
+        purchase_order_id=purchase_order_id,
         total_quantity=data.get('total_quantity', 0),
         inbound_date=datetime.fromisoformat(data['inbound_date']) if data.get('inbound_date') else datetime.now(timezone.utc),
-        status=data.get('status', 'pending'),
+        status=data.get('status') or 'pending',
         created_by=get_current_employee_id(),
         notes=data.get('notes', '')
     )
@@ -234,34 +245,45 @@ def add_inbound_record():
 
     total_qty = 0
     for item in data.get('items', []):
-        total_qty += item['quantity']
+        pid = item.get('product_id')
+        if not pid: continue
+        qty = item.get('quantity', 0)
+        total_qty += qty
         ii = InboundItem(
             inbound_record_id=record.inbound_record_id,
-            product_id=item['product_id'],
+            product_id=pid,
             batch_no=item.get('batch_no', ''),
-            quantity=item['quantity'],
+            quantity=qty,
             unit_price=item.get('unit_price'),
             expiry_date=datetime.strptime(item['expiry_date'], '%Y-%m-%d').date() if item.get('expiry_date') else None,
             bin_location=item.get('bin_location', '')
         )
         db.session.add(ii)
 
-        inv = Inventory.query.filter_by(product_id=item['product_id'], warehouse_id=data['warehouse_id']).first()
+        inv = Inventory.query.filter_by(product_id=pid, warehouse_id=data['warehouse_id']).first()
         if inv:
-            inv.stock_quantity += item['quantity']
+            inv.stock_quantity += qty
             inv.last_restock_date = datetime.now(timezone.utc)
         else:
             inv = Inventory(
-                product_id=item['product_id'],
+                product_id=pid,
                 warehouse_id=data['warehouse_id'],
-                stock_quantity=item['quantity']
+                stock_quantity=qty
             )
             db.session.add(inv)
+        if item.get('unit_price'):
+            product = Product.query.get(pid)
+            if product:
+                product.cost_price = item['unit_price']
 
     record.total_quantity = total_qty
-    db.session.commit()
-    log_operation('purchase', 'create', 'InboundRecord', record.inbound_record_id, data.get('inbound_no', ''))
-    return jsonify(success_response({'inbound_record_id': record.inbound_record_id}, '入库记录创建成功'))
+    try:
+        db.session.commit()
+        log_operation('purchase', 'create', 'InboundRecord', record.inbound_record_id, data.get('inbound_no', ''))
+        return jsonify(success_response({'inbound_record_id': record.inbound_record_id}, '入库记录创建成功'))
+    except Exception as e:
+        db.session.rollback()
+        return error_response(f'入库失败: {str(e)}')
 
 
 @bp.route('/api/inbound-records/<int:id>', methods=['PUT'])
@@ -271,7 +293,7 @@ def update_inbound_record(id):
     record = InboundRecord.query.get_or_404(id)
     data, err = get_json()
     if err: return err
-    for field in ['supplier_id', 'warehouse_id', 'status', 'notes']:
+    for field in ['supplier_id', 'warehouse_id', 'purchase_order_id', 'status', 'notes']:
         if field in data:
             setattr(record, field, data[field])
     if data.get('inbound_date'):
@@ -280,12 +302,15 @@ def update_inbound_record(id):
         InboundItem.query.filter_by(inbound_record_id=id).delete()
         total_qty = 0
         for item in data['items']:
-            total_qty += item['quantity']
+            pid = item.get('product_id')
+            if not pid: continue
+            qty = item.get('quantity', 0)
+            total_qty += qty
             ii = InboundItem(
                 inbound_record_id=id,
-                product_id=item['product_id'],
+                product_id=pid,
                 batch_no=item.get('batch_no', ''),
-                quantity=item['quantity'],
+                quantity=qty,
                 unit_price=item.get('unit_price'),
                 bin_location=item.get('bin_location', '')
             )
@@ -294,6 +319,19 @@ def update_inbound_record(id):
     db.session.commit()
     log_operation('purchase', 'update', 'InboundRecord', id, data.get('inbound_no') or record.inbound_no)
     return jsonify(success_response(message='入库记录更新成功'))
+
+
+@bp.route('/api/inbound-records/<int:id>/receive', methods=['PUT'])
+@require_auth
+@require_permission('purchase:crud')
+def receive_inbound_record(id):
+    record = InboundRecord.query.get_or_404(id)
+    if record.status != 'pending':
+        return error_response('只能确认收货待处理状态的入库记录')
+    record.status = 'received'
+    db.session.commit()
+    log_operation('purchase', 'receive', 'InboundRecord', id, record.inbound_no)
+    return jsonify(success_response(message='确认收货成功'))
 
 
 @bp.route('/api/inbound-records/<int:id>', methods=['DELETE'])

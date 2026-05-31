@@ -54,6 +54,7 @@ class InboundRecord(db.Model):
     total_quantity = db.Column(db.Integer, default=0)
     inbound_date = db.Column(db.DateTime, nullable=False)
     status = db.Column(db.String(20), default='pending')
+    purchase_order_id = db.Column(db.Integer, db.ForeignKey('purchase_orders.order_id'), nullable=True)
     created_by = db.Column(db.Integer, db.ForeignKey('employees.employee_id'), nullable=False)
     notes = db.Column(db.Text)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
@@ -61,6 +62,7 @@ class InboundRecord(db.Model):
 
     supplier = db.relationship('Supplier')
     warehouse = db.relationship('Warehouse')
+    purchase_order = db.relationship('PurchaseOrder', backref='inbound_records')
     creator = db.relationship('Employee', foreign_keys=[created_by])
     items = db.relationship('InboundItem', backref='inbound_record', cascade='all, delete-orphan')
 
@@ -89,6 +91,7 @@ class OutboundRecord(db.Model):
     outbound_date = db.Column(db.DateTime, nullable=False)
     status = db.Column(db.String(20), default='pending')
     created_by = db.Column(db.Integer, db.ForeignKey('employees.employee_id'), nullable=False)
+    approved_by = db.Column(db.Integer, db.ForeignKey('employees.employee_id'), nullable=True)
     notes = db.Column(db.Text)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
@@ -96,6 +99,7 @@ class OutboundRecord(db.Model):
     source_order = db.relationship('SalesOrder', foreign_keys=[source_order_id])
     warehouse = db.relationship('Warehouse')
     creator = db.relationship('Employee', foreign_keys=[created_by])
+    approver = db.relationship('Employee', foreign_keys=[approved_by])
     items = db.relationship('OutboundItem', backref='outbound_record', cascade='all, delete-orphan')
 
 

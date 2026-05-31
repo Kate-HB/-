@@ -89,5 +89,8 @@ class TaxDeclaration(db.Model):
     payment_status = db.Column(db.String(20), default='unpaid')
     submitted_to = db.Column(db.String(100))
     submission_date = db.Column(db.Date)
+    approved_by = db.Column(db.Integer, db.ForeignKey('employees.employee_id'), nullable=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    approver = db.relationship('Employee', foreign_keys=[approved_by])

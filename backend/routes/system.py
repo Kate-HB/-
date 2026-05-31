@@ -33,7 +33,7 @@ def get_users():
         'employee_id': r.employee_id,
         'status': r.status,
         'last_login': r.last_login.isoformat() if r.last_login else None,
-        'roles': [{'role_id': ur.role_id, 'role_name': ur.role.role_name} for ur in r.user_roles],
+        'roles': [{'role_id': ur.role_id, 'role_name': ur.role.role_name if ur.role else ''} for ur in r.user_roles],
         'created_at': r.created_at.isoformat() if r.created_at else None
     } for r in rows]
 
@@ -95,7 +95,7 @@ def toggle_user_lock(id):
     user = User.query.get_or_404(id)
     user.status = 'active' if user.status == 'locked' else 'locked'
     db.session.commit()
-    log_operation('system', 'update', 'User', id, data.get('username') or user.username)
+    log_operation('system', 'update', 'User', id, user.username)
     return jsonify(success_response(message=f'用户已{user.status}'))
 
 
@@ -167,7 +167,7 @@ def delete_role(id):
     UserRole.query.filter_by(role_id=id).delete()
     db.session.delete(role)
     db.session.commit()
-    log_operation('system', 'delete', 'Role', id, data.get('role_name') or role.role_name)
+    log_operation('system', 'delete', 'Role', id, role.role_name)
     return jsonify(success_response(message='角色删除成功'))
 
 
@@ -230,7 +230,7 @@ def delete_permission(id):
     RolePermission.query.filter_by(permission_id=id).delete()
     db.session.delete(perm)
     db.session.commit()
-    log_operation('system', 'delete', 'Permission', id, data.get('permission_code') or perm.permission_code)
+    log_operation('system', 'delete', 'Permission', id, perm.permission_code)
     return jsonify(success_response(message='权限删除成功'))
 
 
@@ -403,16 +403,34 @@ def get_backup_records():
 @bp.route('/api/backup-records', methods=['POST'])
 @require_auth
 def add_backup_record():
+    import shutil
+    from pathlib import Path
     data, err = get_json()
     if err: return err
+
+    backup_dir = Path(__file__).resolve().parent.parent / 'backups'
+    backup_dir.mkdir(exist_ok=True)
+
+    backup_type = data.get('backup_type', 'full')
+    timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+    backup_filename = f'backup_{backup_type}_{timestamp}.db'
+    backup_path = backup_dir / backup_filename
+
+    db_path = Path(__file__).resolve().parent.parent / 'supermarket.db'
+    try:
+        shutil.copy2(str(db_path), str(backup_path))
+        backup_size = backup_path.stat().st_size
+    except Exception as e:
+        return error_response(f'备份失败: {str(e)}')
+
     br = BackupRecord(
-        backup_type=data.get('backup_type', 'full'),
-        backup_path=data.get('backup_path', '/backups/' + datetime.now().strftime('%Y%m%d%H%M%S') + '.sql'),
-        backup_size=data.get('backup_size'),
-        status=data.get('status', 'in_progress'),
+        backup_type=backup_type,
+        backup_path=str(backup_path),
+        backup_size=backup_size,
+        status='success',
         executed_by=get_current_employee_id()
     )
     db.session.add(br)
     db.session.commit()
-    log_operation('system', 'create', 'BackupRecord', br.backup_id, data.get('backup_type', ''))
-    return jsonify(success_response({'backup_id': br.backup_id}, '备份记录创建成功'))
+    log_operation('system', 'create', 'BackupRecord', br.backup_id, backup_type)
+    return jsonify(success_response({'backup_id': br.backup_id, 'backup_path': str(backup_path)}, '备份创建成功'))

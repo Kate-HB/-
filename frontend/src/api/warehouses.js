@@ -9,3 +9,4 @@ export const getOutboundRecords = (params) => get('/outbound-records', params);
 export const createOutboundRecord = (data) => post('/outbound-records', data);
 export const updateOutboundRecord = (id, data) => put(`/outbound-records/${id}`, data);
 export const deleteOutboundRecord = (id) => del(`/outbound-records/${id}`);
+export const approveOutboundRecord = (id) => put(`/outbound-records/${id}/approve`);

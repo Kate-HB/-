@@ -19,7 +19,7 @@ import DataTable from '@/components/DataTable.vue';
 import FormModal from '@/components/FormModal.vue';
 import ConfirmDialog from '@/components/ConfirmDialog.vue';
 import StatusBadge from '@/components/StatusBadge.vue';
-import { createOutboundRecord, updateOutboundRecord, deleteOutboundRecord } from '@/api/warehouses';
+import { createOutboundRecord, updateOutboundRecord, deleteOutboundRecord, approveOutboundRecord } from '@/api/warehouses';
 import { getProducts } from '@/api/products';
 import { getWarehouses } from '@/api/warehouses';
 import { formatDate } from '@/utils/format';
@@ -45,6 +45,7 @@ const statusFilters = [
 
 const actions = [
   { label: '编辑', icon: 'fa-edit', color: 'emerald', visible: (row) => row.status !== 'completed', handler: openEdit },
+  { label: '审批', icon: 'fa-check', color: 'blue', visible: (row) => row.status === 'pending', handler: async (row) => { try { await approveOutboundRecord(row.outbound_record_id); tableRef.value?.fetchData(); } catch (e) { toast.error(e.message); } } },
   { label: '删除', icon: 'fa-trash', color: 'red', handler: (row) => { delItem.value = row; delVisible.value = true; } }
 ];
 

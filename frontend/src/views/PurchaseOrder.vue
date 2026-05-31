@@ -21,7 +21,7 @@ import FormModal from '@/components/FormModal.vue';
 import ConfirmDialog from '@/components/ConfirmDialog.vue';
 import StatusBadge from '@/components/StatusBadge.vue';
 import { getPurchaseOrders, createPurchaseOrder, updatePurchaseOrder, deletePurchaseOrder, approvePurchaseOrder } from '@/api/purchases';
-import { getSuppliers } from '@/api/suppliers';
+import { getSuppliers, getContracts } from '@/api/suppliers';
 import { getProducts } from '@/api/products';
 import { getWarehouses } from '@/api/warehouses';
 import { formatCurrency, formatDate } from '@/utils/format';
@@ -35,6 +35,7 @@ const extraParams = computed(() => preStatus.value ? { status: preStatus.value }
 const modalVisible = ref(false); const deleteVisible = ref(false);
 const editingItem = ref(null); const submitting = ref(false); const deleteId = ref(null);
 const supplierOptions = ref([]); const productOptions = ref([]); const warehouseOptions = ref([]);
+const contractOptions = ref([]);
 
 const columns = [
   { key: 'order_id', label: 'ID', width: '70px' },
@@ -59,10 +60,11 @@ const actions = [
 
 const formFields = [
   { key: 'supplier_id', label: '供应商', type: 'select', required: true, options: supplierOptions, optionValue: 'supplier_id', optionLabel: 'supplier_name' },
+  { key: 'contract_id', label: '关联合同', type: 'select', options: contractOptions, optionValue: 'contract_id', optionLabel: 'contract_number' },
   { key: 'order_date', label: '订单日期', type: 'date' },
   { key: 'delivery_date', label: '预计到货', type: 'date' },
   { key: 'warehouse_id', label: '入库仓库', type: 'select', options: warehouseOptions, optionValue: 'warehouse_id', optionLabel: 'warehouse_name' },
-  { key: 'status', label: '状态', type: 'select',
+  { key: 'status', label: '状态', type: 'select', default: 'pending',
     options: [{ value: 'draft', label: '草稿' }, { value: 'pending', label: '待审批' }, { value: 'approved', label: '已审批' }] },
   { key: 'items', label: '采购明细', type: 'table',
     subColumns: [
@@ -78,6 +80,7 @@ onMounted(async () => {
   try { const r = await getSuppliers(); supplierOptions.value = r.data || []; } catch {}
   try { const r = await getProducts(); productOptions.value = r.data || []; } catch {}
   try { const r = await getWarehouses(); warehouseOptions.value = r.data || []; } catch {}
+  try { const r = await getContracts(); contractOptions.value = r.data || []; } catch {}
 });
 
 function openAdd() { editingItem.value = null; modalVisible.value = true; }

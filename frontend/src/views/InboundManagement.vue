@@ -19,7 +19,7 @@ import DataTable from '@/components/DataTable.vue';
 import FormModal from '@/components/FormModal.vue';
 import ConfirmDialog from '@/components/ConfirmDialog.vue';
 import StatusBadge from '@/components/StatusBadge.vue';
-import { getInboundRecords, createInboundRecord, updateInboundRecord, deleteInboundRecord } from '@/api/purchases';
+import { getInboundRecords, createInboundRecord, updateInboundRecord, deleteInboundRecord, receiveInboundRecord, getPurchaseOrders } from '@/api/purchases';
 import { getSuppliers } from '@/api/suppliers';
 import { getProducts } from '@/api/products';
 import { getWarehouses } from '@/api/warehouses';
@@ -30,6 +30,7 @@ const toast = useToast();
 const tableRef = ref(null); const modalVisible = ref(false); const submitting = ref(false);
 const editingItem = ref(null); const delVisible = ref(false); const delItem = ref(null);
 const supplierOptions = ref([]); const productOptions = ref([]); const warehouseOptions = ref([]);
+const purchaseOrderOptions = ref([]);
 
 const columns = [
   { key: 'inbound_record_id', label: 'ID', width: '70px' },
@@ -46,6 +47,7 @@ const statusFilters = [
 ];
 
 const actions = [
+  { label: '收货', icon: 'fa-box', color: 'blue', visible: (row) => row.status === 'pending', handler: async (row) => { try { await receiveInboundRecord(row.inbound_record_id); tableRef.value?.fetchData(); } catch (e) { toast.error(e.message); } } },
   { label: '编辑', icon: 'fa-edit', color: 'emerald', visible: (row) => row.status !== 'completed', handler: openEdit },
   { label: '删除', icon: 'fa-trash', color: 'red', handler: (row) => { delItem.value = row; delVisible.value = true; } }
 ];
@@ -53,6 +55,7 @@ const actions = [
 const formFields = [
   { key: 'supplier_id', label: '供应商', type: 'select', required: true, options: supplierOptions, optionValue: 'supplier_id', optionLabel: 'supplier_name' },
   { key: 'warehouse_id', label: '仓库', type: 'select', required: true, options: warehouseOptions, optionValue: 'warehouse_id', optionLabel: 'warehouse_name' },
+  { key: 'purchase_order_id', label: '关联采购单', type: 'select', options: purchaseOrderOptions, optionValue: 'order_id', optionLabel: 'order_number' },
   { key: 'inbound_date', label: '入库日期', type: 'date' },
   { key: 'notes', label: '备注', type: 'textarea' },
   { key: 'items', label: '入库明细', type: 'table',
@@ -70,6 +73,7 @@ onMounted(async () => {
   try { const r = await getSuppliers(); supplierOptions.value = r.data || []; } catch {}
   try { const r = await getProducts(); productOptions.value = r.data || []; } catch {}
   try { const r = await getWarehouses(); warehouseOptions.value = r.data || []; } catch {}
+  try { const r = await getPurchaseOrders(); purchaseOrderOptions.value = r.data || []; } catch {}
 });
 
 function openAdd() { editingItem.value = null; modalVisible.value = true; }

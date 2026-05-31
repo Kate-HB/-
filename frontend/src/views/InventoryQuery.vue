@@ -49,13 +49,15 @@ const actions = [
 
 const adjustFields = [
   { key: 'inventory_id', label: '库存ID', type: 'number' },
-  { key: 'stock_quantity', label: '新库存数量', type: 'number', required: true }
+  { key: 'stock_quantity', label: '新库存数量', type: 'number', required: true },
+  { key: 'safety_stock', label: '安全库存', type: 'number' }
 ];
 
 function openAdjust(row) {
   adjustItem.value = row;
   adjustFields[0].default = row.inventory_id;
   adjustFields[1].default = row.stock_quantity;
+  adjustFields[2].default = row.safety_stock;
   adjustVisible.value = true;
 }
 

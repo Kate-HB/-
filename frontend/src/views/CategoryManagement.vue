@@ -41,8 +41,7 @@ const categoryOptions = ref([]);
 const columns = [
   { key: 'category_id', label: 'ID', width: '70px' },
   { key: 'category_name', label: '分类名称' },
-  { key: 'description', label: '描述' },
-  { key: 'sort_order', label: '排序' }
+  { key: 'description', label: '描述' }
 ];
 
 const actions = [
@@ -53,8 +52,7 @@ const actions = [
 const formFields = [
   { key: 'category_name', label: '分类名称', type: 'text', required: true },
   { key: 'parent_category_id', label: '父分类', type: 'select', options: categoryOptions, optionValue: 'category_id', optionLabel: 'category_name' },
-  { key: 'description', label: '描述', type: 'textarea' },
-  { key: 'sort_order', label: '排序号', type: 'number' }
+  { key: 'description', label: '描述', type: 'textarea' }
 ];
 
 onMounted(async () => { try { const r = await getCategories(); categoryOptions.value = r.data || []; } catch {} });

@@ -184,7 +184,7 @@ def get_schedules():
     result = [{
         'schedule_id': r.schedule_id,
         'employee_id': r.employee_id,
-        'employee_name': r.employee.employee_name,
+        'employee_name': r.employee.employee_name if r.employee else '',
         'work_date': r.work_date.isoformat() if r.work_date else None,
         'shift_type': r.shift_type,
         'start_time': r.start_time.strftime('%H:%M') if r.start_time else '',
@@ -266,7 +266,7 @@ def get_attendances():
     result = [{
         'attendance_id': r.attendance_id,
         'employee_id': r.employee_id,
-        'employee_name': r.employee.employee_name,
+        'employee_name': r.employee.employee_name if r.employee else '',
         'schedule_id': r.schedule_id,
         'check_in_time': r.check_in_time.isoformat() if r.check_in_time else None,
         'check_out_time': r.check_out_time.isoformat() if r.check_out_time else None,
@@ -353,7 +353,7 @@ def get_payrolls():
     result = [{
         'payroll_id': r.payroll_id,
         'employee_id': r.employee_id,
-        'employee_name': r.employee.employee_name,
+        'employee_name': r.employee.employee_name if r.employee else '',
         'pay_period': r.pay_period,
         'base_salary': float(r.base_salary),
         'bonus': float(r.bonus),

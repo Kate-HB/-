@@ -161,10 +161,11 @@ def update_member_level(id):
 def delete_member_level(id):
     try:
         from models.member import Member
-        Member.query.filter_by(level=MemberLevel.query.get_or_404(id).level_name).update({'level': '普通会员'})
+        level = MemberLevel.query.get_or_404(id)
+        Member.query.filter_by(level=level.level_name).update({'level': '普通会员'})
         MemberLevel.query.filter_by(level_id=id).delete()
         db.session.commit()
-        log_operation('member', 'delete', 'MemberLevel', id, data.get('level_name') or level.level_name)
+        log_operation('member', 'delete', 'MemberLevel', id, level.level_name)
         return jsonify(success_response(message='会员等级删除成功'))
     except Exception:
         db.session.rollback()
@@ -190,7 +191,7 @@ def get_member_points():
     result = [{
         'record_id': r.record_id,
         'member_id': r.member_id,
-        'member_name': r.member.member_name,
+        'member_name': r.member.member_name if r.member else '',
         'points_change': r.points_change,
         'change_type': r.change_type,
         'related_order_id': r.related_order_id,

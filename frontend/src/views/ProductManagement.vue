@@ -75,7 +75,6 @@ const formFields = [
   { key: 'supplier_id', label: '供应商', type: 'select', required: true, options: supplierOptions, optionValue: 'supplier_id', optionLabel: 'supplier_name' },
   { key: 'base_price', label: '售价', type: 'number', required: true },
   { key: 'cost_price', label: '成本价', type: 'number' },
-  { key: 'stock_quantity', label: editingItem.value ? '库存' : '初始库存', type: 'number', default: 0 },
   { key: 'spec', label: '规格', type: 'text' },
   { key: 'unit', label: '单位', type: 'text' },
   { key: 'description', label: '描述', type: 'textarea' },
@@ -99,8 +98,7 @@ function openEdit(row) {
   errorMsg.value = '';
   editingItem.value = {
     ...row,
-    base_price: Number(row.base_price ?? 0),
-    stock_quantity: Number(row.stock_quantity ?? 0)
+    base_price: Number(row.base_price ?? 0)
   };
   modalVisible.value = true;
 }
