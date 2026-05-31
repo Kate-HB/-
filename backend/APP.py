@@ -202,11 +202,11 @@ def seed_test_data():
     staff_codes = ['product:crud','sales:crud','member:crud','warehouse:crud','purchase:crud']
     for code in mgr_codes:
         p = Permission.query.filter_by(permission_code=code).first()
-        if p:
+        if p and not RolePermission.query.filter_by(role_id=role_mgr.role_id, permission_id=p.permission_id).first():
             db.session.add(RolePermission(role_id=role_mgr.role_id, permission_id=p.permission_id))
     for code in staff_codes:
         p = Permission.query.filter_by(permission_code=code).first()
-        if p:
+        if p and not RolePermission.query.filter_by(role_id=role_staff.role_id, permission_id=p.permission_id).first():
             db.session.add(RolePermission(role_id=role_staff.role_id, permission_id=p.permission_id))
 
     # ── Positions ──
