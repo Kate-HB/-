@@ -73,6 +73,16 @@ def create_app():
     def health_check():
         return success_response({'status': 'ok'})
 
+    @app.post('/api/admin/seed')
+    def admin_seed():
+        try:
+            seed_permissions()
+            seed_test_data()
+            return success_response({'status': 'ok'}, '测试数据已生成')
+        except Exception as e:
+            db.session.rollback()
+            return error_response(str(e), 500)
+
     return app
 
 
