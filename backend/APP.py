@@ -58,8 +58,16 @@ def create_app():
             import_module(module_name)
 
         db.create_all()
-        seed_permissions()
-        seed_test_data()
+        try:
+            seed_permissions()
+        except Exception as e:
+            db.session.rollback()
+            print(f'[seed] permissions error: {e}')
+        try:
+            seed_test_data()
+        except Exception as e:
+            db.session.rollback()
+            print(f'[seed] test_data error: {e}')
 
     @app.get('/api/health')
     def health_check():
