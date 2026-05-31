@@ -69,6 +69,17 @@ def create_app():
 def seed_permissions():
     from models.system import Permission
     perms = [
+        # CRUD 权限（侧边栏需要）
+        ('product:crud', '商品管理', 'product', '管理商品、分类与促销'),
+        ('supplier:crud', '供应商管理', 'supplier', '管理供应商、合同与评价'),
+        ('purchase:crud', '采购管理', 'purchase', '管理采购订单与入库'),
+        ('warehouse:crud', '仓库管理', 'warehouse', '管理仓库配置与库存调整'),
+        ('sales:crud', '销售管理', 'sales', '管理销售订单、退货与收银'),
+        ('member:crud', '会员管理', 'member', '管理会员、等级与积分'),
+        ('employee:crud', '员工管理', 'employee', '管理员工、排班与薪资'),
+        ('finance:crud', '财务管理', 'finance', '管理账户、凭证与预算'),
+        ('sys:manage', '系统管理', 'system', '管理用户、角色与权限'),
+        # 审批权限
         ('purchase.approve', '采购审批', 'purchase', '审批采购订单'),
         ('sales.return.approve', '退货审批', 'sales', '审批销售退货单'),
         ('finance.journal.post', '凭证过账', 'finance', '会计分录过账'),
