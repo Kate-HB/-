@@ -1,0 +1,1 @@
+import{o as a,c as o,b as e,t as l}from"./index-G-LZqIJN.js";const n={class:"flex flex-col items-center justify-center py-16 text-slate-400"},c={class:"text-sm"},m={__name:"EmptyState",props:{message:{type:String,default:"暂无数据"}},setup(s){return(r,t)=>(a(),o("div",n,[t[0]||(t[0]=e("i",{class:"fa-solid fa-inbox text-5xl mb-3"},null,-1)),e("p",c,l(s.message),1)]))}};export{m as _};
