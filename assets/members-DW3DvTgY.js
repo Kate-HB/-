@@ -1,0 +1,1 @@
+import{g as a,p as t,a as m,d as r}from"./index-bOfyraVH.js";const o=e=>a("/members",e),l=e=>m("/members",e),c=(e,s)=>t(`/members/${e}`,s),n=e=>r(`/members/${e}`),d=e=>m("/member-levels",e),p=(e,s)=>t(`/member-levels/${e}`,s),M=e=>r(`/member-levels/${e}`),v=e=>m("/member-points",e);export{p as a,d as b,l as c,n as d,M as e,v as f,o as g,c as u};

@@ -1,0 +1,1 @@
+import{g as a,a as e,p as t}from"./index-bOfyraVH.js";const c=s=>a("/sales-orders",s),o=s=>e("/sales-returns",s),l=s=>t(`/sales-returns/${s}/approve`),n=s=>a(`/sales-orders/${s}/items`),p=s=>e("/calculate-discounts",s),u=s=>e("/cash-register",s);export{p as a,n as b,u as c,o as d,l as e,c as g};
